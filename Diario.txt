@@ -1,0 +1,8 @@
+Baixei pelo gerenciador de pacotes do python:
+- asyncio
+- websocket
+
+sudo pip3 install websockets
+
+Tutorial utilizado: 
+http://junglecoders.blogspot.com.br/2014/08/servidor-de-chat-com-websockets-e.html
