@@ -3,6 +3,8 @@ Baixei pelo gerenciador de pacotes do python:
 - websocket
 
 sudo pip3 install websockets
+Para executar utilize python3 server.py
+Abra outra tela do terminal e execute o cliente e verá ele mandando mensagem no servidor.
 
 Tutorial utilizado: 
 http://junglecoders.blogspot.com.br/2014/08/servidor-de-chat-com-websockets-e.html
