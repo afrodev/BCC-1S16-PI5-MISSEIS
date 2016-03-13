@@ -1,0 +1,30 @@
+1º Entrega  
+
+Para instalar o python3 é necessário baixar o brew, e executar o comando brew install python3.
+
+No começo do projeto procuramos como funciona a sintaxe do python pois nunca mexemos com esta linguagem anteriormente, no próprio site do python, lemos um pouco da sua documentação.
+Após isso vimos como funcionava o seu gerenciador de pacotes, o pip.
+Estamos utilizando o OSX El Capitain.
+
+Após começar a desenvolver em python, procuramos alguns pacotes que serviriam para o projeto. 
+    No caso, utilizamos o websockets3.0: https://pypi.python.org/pypi/websockets
+    E também para a parte de client: https://pypi.python.org/pypi/websocket-client/
+Após baixar os dois por comando de terminal: sudo pip3 install websockets e sudo pip3 install websocket-client
+
+Mas demoramos a perceber que tinhamos que usar pip3 para compilar. Assim como demoramos pra descobrir que para compilar arquivos python era necessário usar python3.
+
+Anteriormente, usavamos para compilar python nomedoarquivo.py, entrentanto quando executamos este comando, vemos que ele dava erro ao executar as bibliotecas do websocket e do asyncio, uma vez que elas tinham comando do python 3 superior, sendo que ao utilizar python sozinho estaria usando a versão do python 2.7. Assim, descobrimos que precisamos complicar com python3 nomedoarquivo.py.
+
+O gerenciador de pacotes pip3 serve para pacotes do python3 e por isso também estava dando errado ao baixar os pacotes e executa-los.
+Outra pacote que estamos utilizando é o asyncio, que serve para fazer requests de forma assíncrona, uma vez que um comando não deve para o servidor quando estão sendo executados, imaginando isso pra milhares de pessoas que usarem o websocket não ficariam muito tempo sem resposta.
+
+Para executar utilize python3 server.py
+Abra outra tela do terminal e execute o cliente e verá ele mandando mensagem no servidor.
+
+Tutorial utilizado: 
+http://junglecoders.blogspot.com.br/2014/08/servidor-de-chat-com-websockets-e.html
+    
+    
+2º Entrega
+
+3º Entrega
