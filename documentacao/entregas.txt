@@ -6,8 +6,8 @@ operacional selecionado. (OK)
 estabelecer a comunicação entre os processos (OK)
     - Coloque comentários (OK)
     
-    - Modifique o código de forma a enviar uma mensagem de texto entre os dois processos
-    - Medir o tempo entre a comunicação do cliente com o servidor
+    - Modifique o código de forma a enviar uma mensagem de texto entre os dois processos (OK)
+    - Medir o tempo entre a comunicação do cliente com o servidor (OK)
     - Aqui estamos falando do tempo total, o servidor manda uma mensagem ao cliente e quando o cliente recebe ele envia um acknowledgement para o servidor, assim que o servidor receber esta mensagem ele tem o tempo total do ciclo de comunicação.
     
     Demonstração:

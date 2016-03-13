@@ -36,10 +36,13 @@ class Servidor:
     def envia_a_todos(self, origem, mensagem):
         print("Enviando a todos")
         for cliente in self.conectados:            
-            if origem != cliente and cliente.conectado:
+            #if origem != cliente and cliente.conectado:
+            if cliente.conectado:
                 print("Enviando de <{0}> para <{1}>: {2}".format(origem.nome, cliente.nome, mensagem))
                 yield from cliente.envia("{0} >> {1}".format(origem.nome, mensagem))
-
+            
+            #Caso queira enviar uma resposta quando terminar de enviar tudo, colocar aqui para enviar para origem novamente a mensagem
+            
     # De modo assincrono, envia mensagem para um destinatário específico a mensagem.
     @asyncio.coroutine
     def envia_a_destinatario(self, origem, mensagem, destinatario):        
@@ -58,6 +61,11 @@ class Servidor:
         return True
 
 # Classe Cliente, que cuidará efetivamente
+
+
+
+
+
 class Cliente:  
     # Inicializa a classe do websocket  
     def __init__(self, servidor, websocket, path):
@@ -79,7 +87,7 @@ class Cliente:
             while True: # Enquanto a mensagem não chegar o servidor fica esperando
                 mensagem = yield from self.recebe()
                 if mensagem:
-                    print("{0} < {1}".format(self.nome, mensagem))
+                    print("{0} enviou a mensagem: {1}".format(self.nome, mensagem))
                     yield from self.processa_comandos(mensagem)                                            
                 else:
                     break
@@ -98,6 +106,7 @@ class Cliente:
     @asyncio.coroutine
     def recebe(self):
         mensagem = yield from self.cliente.recv()
+        self.cliente.send("Volta da mensagem: " + mensagem)
         return mensagem
 
     # Processa os comandos do servidor
@@ -111,7 +120,7 @@ class Cliente:
             if len(comandos) == 0:
                 yield from self.envia("Comando inválido")
                 return
-            print(comandos)
+
             comando = comandos[0].lower()            
             if comando == "horas":
                 yield from self.envia("Hora atual: " + time.strftime("%H:%M:%S"))
@@ -159,10 +168,11 @@ servidor = Servidor()
 loop = asyncio.get_event_loop()
 
 # Inicializa o servidor com web socket 
-start_server = websockets.serve(servidor.conecta, '0.0.0.0', 8765) # Usa-se 0.0.0.0 para pegar o ip do computador local
+start_server = websockets.serve(servidor.conecta, '0.0.0.0', 8766) # Usa-se 0.0.0.0 para pegar o ip do computador local
 
 # Usa um trycatch para deixar rodando infinitamente o servidor de websocket
 try:
+    print("Servidor iniciado!")
     loop.run_until_complete(start_server)
     loop.run_forever()
 finally:
