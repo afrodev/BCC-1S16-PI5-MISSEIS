@@ -159,7 +159,7 @@ servidor = Servidor()
 loop = asyncio.get_event_loop()
 
 # Inicializa o servidor com web socket 
-start_server = websockets.serve(servidor.conecta, 'localhost', 8765)
+start_server = websockets.serve(servidor.conecta, '0.0.0.0', 8765) # Usa-se 0.0.0.0 para pegar o ip do computador local
 
 # Usa um trycatch para deixar rodando infinitamente o servidor de websocket
 try:
