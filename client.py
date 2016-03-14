@@ -3,7 +3,7 @@ from websocket import create_connection
 import time
 
 #Inicializa a conexão com o WebSocket
-ws = create_connection("ws://192.168.0.15:8766")
+ws = create_connection("ws://0.0.0.0:8766")
 
 # Cuida do retorno da conexão de abertura com o websocket
 result = ws.recv()
