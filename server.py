@@ -6,30 +6,18 @@ import time
 
 # Classe Servidor - Cuida das funções do servidor
 class Servidor:
-    # Inicializa a classe
-    def __init__(self):
-        # Inicializa o array que terá todos os conectados no websocket
-        self.conectados = [] 
-
-    # Retorna o numero de pessoas conectadas no websocket
-    @property
-    def nconectados(self):
-        return len(self.conectados)
 
     # Colocando esse codigo antes, executamos a função em modo assincrono
     @asyncio.coroutine
     def conecta(self, websocket, path): 
         cliente = Cliente(self, websocket, path)
-        if cliente not in self.conectados:
-            self.conectados.append(cliente)
-            print("Novo cliente conectado. Total: {0}".format(self.nconectados))
+
+        print("Radar conectado.\n")
         yield from cliente.gerencia() # Com o yield podemos garantir que será executado de forma sequencial, colocando em uma fila.
 
     # Função para desconectar o cliente que entrou no servidor.
     def desconecta(self, cliente):
-        if cliente in self.conectados:
-            self.conectados.remove(cliente)
-        print("Radar desconectado. Total: {0}".format(self.nconectados))     
+        print("Radar desconectado.")     
 
 # Classe Cliente - Cuida das funçoes de transferencia de mensagem
 class Cliente:  
@@ -43,10 +31,7 @@ class Cliente:
     def gerencia(self):
         try:
             # De forma sequencial, envia a todos os usuários a mensagem
-            quant = len(servidor.conectados)
-            yield from self.envia("Radar {0} Conectado|".format(quant) + "{0}".format(quant))
-            resposta = yield from self.recebe()
-            print(resposta)
+            yield from self.envia("Radar Conectado")
 
             while True: # Enquanto a mensagem não chegar o servidor fica esperando
                 # Escreve a mensagem vinda do teclado
@@ -58,23 +43,23 @@ class Cliente:
                 intervaloLimite = 2;
 
                 mensagemTotal = mensagem
-
                 result = "1";
 
-                print("Enviando....")
+                print("\nEnviando....")
 
                 while not result == "0" and tempoTotal < intervaloLimite:
                     yield from self.envia(mensagemTotal)
                 
                     # Recebe o retorno e pega o tempo que demora para ele retornar
                     result = yield from self.recebe()
+
                     tempoRecebimento = time.time()
                     tempoTotal = tempoRecebimento - tempoEnvio
                     
                 if result != "0":
                     print("Falha no envio, tempo limite excedido.")
                 else:
-                    print("Enviado! (tempo total: {0})".format(tempoTotal))
+                    print("Enviado! (tempo total: {0})".format(tempoTotal) + "\n")
                     
         except Exception:
             print("Erro")
@@ -91,7 +76,6 @@ class Cliente:
     @asyncio.coroutine
     def recebe(self):
         mensagem = yield from self.cliente.recv()
-        self.cliente.send("Volta da mensagem: " + mensagem)
         return mensagem
 
 
