@@ -22,24 +22,29 @@ while True:
     
     #Coloca o tempo na hora de enviar a mensagem e envia
     tempoEnvio = time.time()
+    tempoTotal = 0;
+    intervaloLimite = 2;
 
     mensagemTotal = str(tempoEnvio) + "|" + mensagem
     
     result = "1";
 
-    while not result == "0":
+    print("Enviando....")
+
+    while not result == "0" and tempoTotal < intervaloLimite:
         ws.send(mensagemTotal)
-    
-        print("Enviando....")
     
         # Recebe o retorno e pega o tempo que demora para ele retornar
         result = ws.recv()
+        tempoRecebimento = time.time()
+        tempoTotal = tempoRecebimento - tempoEnvio
         
-    print("Enviado!")
-    
+    if result != "0":
+        print("Falha no envio, tempo limite excedido.")
+    else:
+        print("Enviado!")
     
 ws.close()
-
 
 print("Saiu do for")
 ws.run_forever()
