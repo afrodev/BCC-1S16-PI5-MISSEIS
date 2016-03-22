@@ -6,6 +6,8 @@ import time
 
 # Classe Servidor - Cuida das funções do servidor
 class Servidor:
+    def __init__(self):
+        self.tempos = []
 
     # Colocando esse codigo antes, executamos a função em modo assincrono
     @asyncio.coroutine
@@ -59,7 +61,13 @@ class Cliente:
                 if result != "0":
                     print("Falha no envio, tempo limite excedido.")
                 else:
-                    print("Enviado! (tempo total: {0})".format(tempoTotal) + "\n")
+                    servidor.tempos.append(tempoTotal);
+                    print("Enviado! (tempo total: {0})".format(tempoTotal))
+                    total = 0
+                    for tempo in servidor.tempos:
+                        total += tempo
+
+                    print("tempo medio: {0}".format(total / len(servidor.tempos)) + "\n")
                     
         except Exception:
             print("Erro")
@@ -94,7 +102,4 @@ try:
     loop.run_forever()
 finally:
     start_server.close()
-
-
-
-
+    
