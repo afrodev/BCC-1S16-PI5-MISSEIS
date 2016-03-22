@@ -6,11 +6,16 @@ import time
 ws = create_connection("ws://0.0.0.0:8766")
 
 # Cuida do retorno da conexão de abertura com o websocket
-result = ws.recv()
-print("Abertura - " + result)
+resultParc = ws.recv()
+
+result = resultParc.split("|", 1)
+
+identityNumber = int(result[1])
+
+print("Iniciando - " + str(result[0]))
     
 # Envia mensagem de conexao no servidor
-ws.send("Radar conectado")
+ws.send("Radar {0} conectado".format(identityNumber))
 
 def on_error(ws, error):
     print(error)
@@ -25,8 +30,8 @@ while True:
     tempoTotal = 0;
     intervaloLimite = 2;
 
-    mensagemTotal = str(tempoEnvio) + "|" + mensagem
-    
+    mensagemTotal = str(identityNumber) + "|" + str(tempoEnvio) + "|" + mensagem
+
     result = "1";
 
     print("Enviando....")

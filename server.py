@@ -22,7 +22,7 @@ class Servidor:
         cliente = Cliente(self, websocket, path)
         if cliente not in self.conectados:
             self.conectados.append(cliente)
-            print("Novo cliente conectado. Total: {0}".format(self.nconectados))            
+            print("Novo cliente conectado. Total: {0}".format(self.nconectados))
         yield from cliente.gerencia() # Com o yield podemos garantir que será executado de forma sequencial, colocando em uma fila.
 
     # Função para desconectar o cliente que entrou no servidor.
@@ -43,21 +43,23 @@ class Cliente:
     def gerencia(self):
         try:
             # De forma sequencial, envia a todos os usuários a mensagem
-            yield from self.envia("Radar Conectado")
+            quant = len(servidor.conectados)
+            yield from self.envia("Radar {0} Conectado|".format(quant) + "{0}".format(quant))
             while True: # Enquanto a mensagem não chegar o servidor fica esperando
                 mensagem = yield from self.recebe()
                 if mensagem:
                     tempoEnvio = 0;
-                    msgFinal = mensagem.split("|", 1);
+                    msgFinal = mensagem.split("|", 2);
 
                     if len(msgFinal) > 1:
-                        tempoEnvio = msgFinal[0]
-                        msgFinal = msgFinal[1]
+                        identityNumber = msgFinal[0]
+                        tempoEnvio = msgFinal[1]
+                        msgFinal = msgFinal[2]
                         
                         tempoRecebimento = time.time()
                         tempoTotal = tempoRecebimento - float(tempoEnvio)
 
-                        print("Mensagem recebida (tempo total - {0}): {1}".format(str(tempoTotal), str(msgFinal)))
+                        print("Radar {0}: Mensagem (tempo total - {1}): {2}".format(identityNumber, str(tempoTotal), str(msgFinal)))
                     else:
                         print("Mensagem: {0}".format(str(msgFinal[0])))
                     print("Aguardando mensagem...")
