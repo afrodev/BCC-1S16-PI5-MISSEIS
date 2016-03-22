@@ -16,40 +16,17 @@ print("Iniciando - " + str(result[0]))
     
 # Envia mensagem de conexao no servidor
 ws.send("Radar {0} conectado".format(identityNumber))
-
-def on_error(ws, error):
-    print(error)
-
+print("Aguardando mensagem...")
 # Crio um laço infinito para enviar mensagens que envia mensagens para o servidor
 while True:
-    # Escreve a mensagem vinda do teclado
-    mensagem = input("Digite sua mensagem: ")
-    
-    #Coloca o tempo na hora de enviar a mensagem e envia
-    tempoEnvio = time.time()
-    tempoTotal = 0;
-    intervaloLimite = 2;
-
-    mensagemTotal = str(identityNumber) + "|" + str(tempoEnvio) + "|" + mensagem
-
-    result = "1";
-
-    print("Enviando....")
-
-    while not result == "0" and tempoTotal < intervaloLimite:
-        ws.send(mensagemTotal)
-    
-        # Recebe o retorno e pega o tempo que demora para ele retornar
-        result = ws.recv()
-        tempoRecebimento = time.time()
-        tempoTotal = tempoRecebimento - tempoEnvio
-        
-    if result != "0":
-        print("Falha no envio, tempo limite excedido.")
+    mensagem = ws.recv()
+    if mensagem:
+        print("Mensagem: {0}".format(mensagem))
+        print("Aguardando mensagem...")
+        ws.send("0")                                            
     else:
-        print("Enviado!")
+        ws.send("1")
     
 ws.close()
 
-print("Saiu do for")
 ws.run_forever()

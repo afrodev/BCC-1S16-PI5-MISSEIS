@@ -45,31 +45,39 @@ class Cliente:
             # De forma sequencial, envia a todos os usuários a mensagem
             quant = len(servidor.conectados)
             yield from self.envia("Radar {0} Conectado|".format(quant) + "{0}".format(quant))
+            resposta = yield from self.recebe()
+            print(resposta)
+
             while True: # Enquanto a mensagem não chegar o servidor fica esperando
-                mensagem = yield from self.recebe()
-                if mensagem:
-                    tempoEnvio = 0;
-                    msgFinal = mensagem.split("|", 2);
+                # Escreve a mensagem vinda do teclado
+                mensagem = input("Digite sua mensagem: ")
+                
+                #Coloca o tempo na hora de enviar a mensagem e envia
+                tempoEnvio = time.time()
+                tempoTotal = 0;
+                intervaloLimite = 2;
 
-                    if len(msgFinal) > 1:
-                        identityNumber = msgFinal[0]
-                        tempoEnvio = msgFinal[1]
-                        msgFinal = msgFinal[2]
-                        
-                        tempoRecebimento = time.time()
-                        tempoTotal = tempoRecebimento - float(tempoEnvio)
+                mensagemTotal = mensagem
 
-                        print("Radar {0}: Mensagem (tempo total - {1}): {2}".format(identityNumber, str(tempoTotal), str(msgFinal)))
-                    else:
-                        print("Mensagem: {0}".format(str(msgFinal[0])))
-                    print("Aguardando mensagem...")
-                    yield from self.envia("0")                                            
+                result = "1";
+
+                print("Enviando....")
+
+                while not result == "0" and tempoTotal < intervaloLimite:
+                    yield from self.envia(mensagemTotal)
+                
+                    # Recebe o retorno e pega o tempo que demora para ele retornar
+                    result = yield from self.recebe()
+                    tempoRecebimento = time.time()
+                    tempoTotal = tempoRecebimento - tempoEnvio
+                    
+                if result != "0":
+                    print("Falha no envio, tempo limite excedido.")
                 else:
-                    yield from self.envia("1")
-                    break
+                    print("Enviado! (tempo total: {0})".format(tempoTotal))
+                    
         except Exception:
             print("Erro")
-            yield from self.envia("1")
             raise        
         finally:
             self.servidor.desconecta(self)
