@@ -5,6 +5,7 @@ import time
 #Inicializa a conexão com o WebSocket
 ws = create_connection("ws://172.20.10.6:8766")
 
+
 # Cuida do retorno da conexão de abertura com o websocket
 print("Iniciando...")
 result = ws.recv()
