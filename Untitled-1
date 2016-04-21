@@ -1,0 +1,6 @@
+TCP/IP
+
+O TCP/IP (Trasminssion Control Protocol) é o principal protocolo de comunicação entre computadores utilizado na internet. Este protocolo, na verdade é um conjunto de protocolos divididos em quatro camadas aplicação, transporte, rede e interface. 
+
+Websocket
+O websocket é uma tecnologia que permite a comunicação bidirecional sobre um unico socket TCP/IP. Baseado no TCP/IP, ela foi projetada para browser e servidores web que suportam o HTML 5 entretanto, pode ser usado por qualquer cliente ou servidor.

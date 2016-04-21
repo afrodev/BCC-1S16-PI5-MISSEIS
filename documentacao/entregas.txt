@@ -19,5 +19,52 @@ estabelecer a comunicação entre os processos (OK)
     
     
 2º Entrega
+Tutorial
+
+Fazer o avião andar e mandar sua posição via websocket
+Criar um vector 3D
+Definir a posição dele inicial
+Sortear se ele vai ser do tipo 1 ou do tipo 2
+Definir a sua área ocupada (é uma esfera de 2m de raio)
+Colocar a base/torre/alvo no centro da tela  (x = 50.000 m e y = 50.000 m, z = 0 m)
+Criar um vector3D
+Definir a posição central 
+Definir a área ocupada (pode ser qualquer uma)
+Colocar um raio de 10km (ou 10.000 m) em volta do alvo.
+Após criar uma torre no (0, 0, 0)
+Calcular o raio (Depois procurar na biblioteca de vector3D)
+Faço o avião do tipo 1, descer até a base
+Para fazer o avião descer temos que escolher uma angulo de -10 e -75, +10 e +75 aleatoriamente. (Não entendi direito)
+Configure o inicial do avião (200m de altitude, 240 km/h)
+Fazer ele descer em direção ao alvo com as leis da fisica S = So + Vo + t (acho)
+Mostrar a distância entre o alvo e do avião (lembrar que precisa estar a 1km do alvo para ser considerado que foi acertado)
+Ele pode desistir de atacar com a probabilidade de 10%, caso ele chegue faltando 3km, ele volta para uma altitude de 1200m e velocidade de 750km/h
+Fazer a base atirar a bolinha e mostra o x, y, z dela
+Criar outro vector3D
+Faço ela andar através das leis da fisica
+Definir uma área para ela, para a colisão: massa = 1,565 kg, velocidade = 1175 m/s e alcance de 4000m
+Calculo se o avião entrou no raio do alvo.
+Verificar se o avião está a 1km de distancia do raio do alvo.
+Faço o calculo da colisão entre a bala e o avião
+Verificar se a bala e o avião estão na mesma area
+Começar a fazer o tipo 2
+Para fazer o avião descer temos que escolher uma angulo de -10 e -75, +10 e +75 aleatoriamente. (Não entendi direito)
+Configure o inicial do avião (500m de altitude, 400 km/h)
+Fazer ele descer em direção ao alvo com as leis da fisica S = So + Vo + t (acho)
+Mostrar a distância entre o alvo e do avião (lembrar que precisa estar a 1km do alvo para ser considerado que foi acertado)
+Ele pode desistir de atacar com a probabilidade de 10%, caso ele chegue faltando 3km, ele volta para uma altitude de 1200m e velocidade de 750km/h
+Calcular a colisão como o tipo 1
+
+Extra links:
+http://stackoverflow.com/questions/29608398/class-vector3d-member-functions-in-python
+http://stackoverflow.com/questions/1401712/how-can-the-euclidean-distance-be-calculated-with-numpy
+http://stackoverflow.com/questions/20184992/finding-3d-distances-using-an-inbuilt-function-in-python
+http://www.pymunk.org/en/latest/
+http://codereview.stackexchange.com/questions/12261/implementation-of-a-vector3d-class
+http://stackoverflow.com/questions/29608398/class-vector3d-member-functions-in-python
+http://docs.scipy.org/doc/numpy/reference/arrays.ndarray.html
+
+
+
 
 3º Entrega

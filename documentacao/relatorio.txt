@@ -27,4 +27,10 @@ http://junglecoders.blogspot.com.br/2014/08/servidor-de-chat-com-websockets-e.ht
     
 2º Entrega
 
+Instalar numpy no osx: brew install homebrew/python/numpy
+pip3 install stsci.distutils
+pip3 install stscipython
+Colocar a pastar sphere https://github.com/jonathansick/stsci_sphere
+dentro da pasta stsci do seu mac dentro da pasta do python
+
 3º Entrega
