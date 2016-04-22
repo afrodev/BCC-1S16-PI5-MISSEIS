@@ -1,40 +1,45 @@
 
-'''
 from math import sqrt, asin
 
 class Vector3D(object):
     def __init__(self, x, y, z):
-        self._x = x
-        self._y = y
-        self._z = z
+        self._points = [x, y, z]
     
     # define as funcoes como propriedades da classe, assim pode ser acessada pela outra classe
     @property
     def x(self):
-        return self._x
+        return self.points[0]
     
     @x.setter
     def x(self, value):
-        self._x = value
+        self.points[0] = value
     
     @property
     def y(self):
-        return self._y
+        return self.points[1]
     
     @y.setter
     def y(self, value):
-        self._y = value
+        self.points[1] = value
     
     @property
     def z(self):
-        return self._z
+        return self.points[2]
     
     @z.setter
     def z(self, value):
-        self._z = value
+        self.points[2] = value
 
+    @property
+    def points(self):
+        return self._points
+    
+    @points.setter
+    def points(self, newPoints):
+        self.points = newPoints
     
     
+    '''
     def __mul__(self, other):
         return Vector3D(self._x*other._x, self._y*other._y, self._z*other._z)
     def mag(self):
@@ -51,7 +56,7 @@ class Vector3D(object):
     def __repr__(self):
         return "({x}, {y}, {z})".format(x=self._x, y=self._y, z=self._z)
     
-    
+    '''
     
     
     
@@ -65,4 +70,3 @@ if __name__ == "__main__":
     print(samplevector.cos_theta())
     print(samplevector.phi())
     
-'''

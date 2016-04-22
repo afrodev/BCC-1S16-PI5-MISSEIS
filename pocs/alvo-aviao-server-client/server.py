@@ -4,7 +4,7 @@ import websockets # Cuida dos métodos de websocket
 import time 
 # import shlex
 
-# Classe Servidor - Cuida das funções do servidor
+# Classe Servidor - Cuida das funções do servidor - é a base
 class Servidor:
     def __init__(self):
         self.tempos = []
@@ -103,3 +103,7 @@ try:
 finally:
     start_server.close()
     
+'''
+ESTA SERÁ O RADAR, JÁ QUE ELE IDENTIFICARÁ O AVIÃO QUE VAI ESTAR NO CÉU E PASSA ATRAVES DE MENSAGENS A POSICAO X, Y, Z para o CLIENTE = BASE 
+TRATAR
+'''
