@@ -69,12 +69,12 @@ class Vector3D(object):
     
     
     
-    
-if __name__ == "__main__":
-    samplevector = Vector3D(1,1,1)
-    print(samplevector)
-    print(samplevector.mag())
-    print(samplevector*Vector3D(1,1,1))
-    print(samplevector.cos_theta())
-    print(samplevector.phi())
+#    
+#if __name__ == "__main__":
+#    samplevector = Vector3D(1,1,1)
+#    print(samplevector)
+#    print(samplevector.mag())
+#    print(samplevector*Vector3D(1,1,1))
+#    print(samplevector.cos_theta())
+#    print(samplevector.phi())
     

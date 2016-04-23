@@ -52,11 +52,11 @@ class Aviao(Vector3D):
    
         
     
-esfera = Aviao(1, 1, 1) 
-
-print(esfera.velocidade)
-esfera.velocidade = 123
-print(esfera.velocidade)
+#esfera = Aviao(1, 1, 1) 
+#
+#print(esfera.velocidade)
+#esfera.velocidade = 123
+#print(esfera.velocidade)
 
 #print(esfera.x)
 #print(esfera.y)
@@ -70,4 +70,4 @@ print(esfera.velocidade)
 #print(esfera.y)
 #print(esfera.z)
 
-print(esfera.points)
+#print(esfera.points)

@@ -48,6 +48,7 @@ def recebeResposta():
                 posicaoAtual = str(aviao.x) + ";" + str(aviao.y) + ";" + str(aviao.z) +  ";" + str(aviao.desiste)
                 ws.send(posicaoAtual)
                 jaDesistiu = 1
+                
         elif mensagem == "d": # destruiu a base
             print("-------------BASE DESTRUIDA---------------")
             ws.close()

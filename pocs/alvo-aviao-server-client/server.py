@@ -3,10 +3,12 @@ import asyncio # Para métodos que rodam assincronamente
 import websockets # Cuida dos métodos de websocket
 import time 
 from base import Base
+import threading
 # import shlex
 
 # Inicializa base no centro
-base = Base(0, 100, 100) 
+base = Base(6000, 6000, 6000) 
+
 
 
 # Classe Servidor - Cuida das funções do servidor - é a base
@@ -25,6 +27,20 @@ class Servidor:
     # Função para desconectar o cliente que entrou no servidor.
     def desconecta(self, cliente):
         print("Radar desconectado.")     
+
+
+# Aqui a bala é atualizada na tela, colocada em thread 
+# para não depender da resposta 
+@asyncio.coroutine
+def atualizaPosicaoBala():
+    balaAtual = base.balaAtual()
+    while True:
+        # aqui ele atira
+        balaAtual.x += 1
+        balaAtual.y += 1
+        balaAtual.z += 1000
+        time.sleep(1)
+        print("POSICAO BALA - " + str(balaAtual.x) + ";" + str(balaAtual.y) + ";" + str(balaAtual.z))
 
 # Classe Cliente - Cuida das funçoes de transferencia de mensagem
 class Cliente:  
@@ -66,6 +82,8 @@ class Cliente:
                     
                     # Calcula a distancia do avião da base
                     arrayResult = result.split(";")
+                    
+                    # Aqui estão as coordenadas do avião
                     arrayResultNum = [float(arrayResult[0]), float(arrayResult[1]), float(arrayResult[2])]
                     vaiDesistir = int(arrayResult[3])
                     
@@ -78,9 +96,18 @@ class Cliente:
                         yield from self.envia("a")
                         # lá no client trata se ele já foi enviado uma vez a atualizacao
                         
-                    if distancia <= 0:
+                    elif distancia <= 0:
                         print("-----------------BASE ATINGIDA----------------")
                         yield from self.envia("d") # Destruida = d = base destruida
+                        
+                        
+                    # Se a distancia for menor que 10km pode atirar de acordo que o mario 
+                    # ache que é o momento certo, coloque as validações aqui
+                    if distancia < 10000:
+                        # dentro da classe base tem 4 balas com funcoes que ajudam
+                        print("menos que 10 km")
+                        #print(str(balaAtual.x) + ";" + str(balaAtual.y) + ";" + str(balaAtual.z))
+                        
                         
                     print("Distancia entre avião: " + str(distancia))
                     
@@ -112,6 +139,9 @@ class Cliente:
     def recebe(self):
         mensagem = yield from self.cliente.recv()
         return mensagem
+    
+
+
 
 
 # Criando o servidor efetivamente

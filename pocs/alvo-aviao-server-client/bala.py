@@ -13,16 +13,21 @@ class Bala(Vector3D):
         self.massa = 1.565
         self.velocidade = 1175
         self.alcance = 4000
+        self.atirada = False
         
     # Retorna o raio da bala
     @property
     def raio(self):
-        return 1    
+        return 1
+    
+
+
+                
 
 # Daqui pra baixo não é executado pois não faz parte da instância    
 bala = Bala(1, 1, 0) 
 bala2 = Bala(100, 100, 22) 
 
 
-dst = distance.euclidean(bala.points, bala2.points)
-print(dst)
+#dst = distance.euclidean(bala.points, bala2.points)
+#print(dst)
