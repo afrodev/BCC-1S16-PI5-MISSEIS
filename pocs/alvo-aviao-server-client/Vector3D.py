@@ -1,11 +1,13 @@
 
+# Importa bibliotecas matemáticas
 from math import sqrt, asin
 
 class Vector3D(object):
+    # Inicializa classe 
     def __init__(self, x, y, z):
         self._points = [x, y, z]
     
-    # define as funcoes como propriedades da classe, assim pode ser acessada pela outra classe
+    # Define as propriedades de classe (getters e setters)
     @property
     def x(self):
         return self.points[0]
@@ -38,7 +40,7 @@ class Vector3D(object):
     def points(self, newPoints):
         self.points = newPoints
     
-    
+# Daqui pra baixo não é executado pois não faz parte da instância    
     '''
     def __mul__(self, other):
         return Vector3D(self._x*other._x, self._y*other._y, self._z*other._z)

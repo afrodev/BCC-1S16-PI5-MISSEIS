@@ -2,7 +2,11 @@
 import asyncio # Para métodos que rodam assincronamente
 import websockets # Cuida dos métodos de websocket
 import time 
+from base import Base
 # import shlex
+
+base = Base(50000, 50000, 0) 
+
 
 # Classe Servidor - Cuida das funções do servidor - é a base
 class Servidor:
@@ -37,7 +41,7 @@ class Cliente:
 
             while True: # Enquanto a mensagem não chegar o servidor fica esperando
                 # Escreve a mensagem vinda do teclado
-                mensagem = input("Digite sua mensagem: ")
+                mensagem = input("Digite sua mensagem: ") #"p"
                 
                 #Coloca o tempo na hora de enviar a mensagem e envia
                 tempoEnvio = time.time()
@@ -49,16 +53,17 @@ class Cliente:
 
                 print("\nEnviando....")
 
-                while not result == "0" and tempoTotal < intervaloLimite:
+                while result == "1" and tempoTotal < intervaloLimite:
                     yield from self.envia(mensagemTotal)
                 
                     # Recebe o retorno e pega o tempo que demora para ele retornar
                     result = yield from self.recebe()
-
+                    print("POSICAO: " + result)
+                    
                     tempoRecebimento = time.time()
                     tempoTotal = tempoRecebimento - tempoEnvio
                     
-                if result != "0":
+                if result == "1":
                     print("Falha no envio, tempo limite excedido.")
                 else:
                     servidor.tempos.append(tempoTotal);
