@@ -5,7 +5,8 @@ import time
 from base import Base
 # import shlex
 
-base = Base(50000, 50000, 0) 
+# Inicializa base no centro
+base = Base(0, 100, 100) 
 
 
 # Classe Servidor - Cuida das funções do servidor - é a base
@@ -63,6 +64,27 @@ class Cliente:
                     tempoRecebimento = time.time()
                     tempoTotal = tempoRecebimento - tempoEnvio
                     
+                    # Calcula a distancia do avião da base
+                    arrayResult = result.split(";")
+                    arrayResultNum = [float(arrayResult[0]), float(arrayResult[1]), float(arrayResult[2])]
+                    vaiDesistir = int(arrayResult[3])
+                    
+                    # Coloquei -1002, pois 1 km da base pra ser considerado acerto e 2 metros de raio do avião 
+                    distancia = base.distanciaEuclidiana(arrayResultNum) - 1002
+                    
+                    # Se ele chgar a uma distancia de 3 km e for desistir
+                    if (distancia < 3000 and vaiDesistir == 1):
+                        # volta para uma altitude de 1200 m e velocidade de 750km/h ou 208,333 m/s
+                        yield from self.envia("a")
+                        # lá no client trata se ele já foi enviado uma vez a atualizacao
+                        
+                    if distancia <= 0:
+                        print("-----------------BASE ATINGIDA----------------")
+                        yield from self.envia("d") # Destruida = d = base destruida
+                        
+                    print("Distancia entre avião: " + str(distancia))
+                    
+                # Está fora do while
                 if result == "1":
                     print("Falha no envio, tempo limite excedido.")
                 else:

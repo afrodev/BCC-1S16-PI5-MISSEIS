@@ -1,6 +1,8 @@
 
 # Importa bibliotecas matemáticas
 from math import sqrt, asin
+from scipy.spatial import distance
+
 
 class Vector3D(object):
     # Inicializa classe 
@@ -39,6 +41,10 @@ class Vector3D(object):
     @points.setter
     def points(self, newPoints):
         self.points = newPoints
+        
+    def distanciaEuclidiana(self, outroVector):
+        dst = distance.euclidean(self.points, outroVector)
+        return dst
     
 # Daqui pra baixo não é executado pois não faz parte da instância    
     '''

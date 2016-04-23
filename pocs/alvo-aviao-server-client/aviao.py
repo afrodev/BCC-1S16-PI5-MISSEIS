@@ -12,6 +12,7 @@ class Aviao(Vector3D):
         self._tipo = randint(1, 2)  # Sorteia entre tipo 1 e 2
         self._velocidade = 0        # Inicializa parametros
         self.inicializaVelocidade() # Inicializa a velocidade de acordo com o tipo
+        self._desiste = randint(1, 10)
         
     # Cria as propriedades para poder ser acessada de outras classes (getters e setters)
     @property
@@ -25,6 +26,14 @@ class Aviao(Vector3D):
     @property
     def tipo(self):
         return self._tipo
+    
+    # Se o avião chegar a 3 km ele desiste ou não
+    @property
+    def desiste(self):
+        if (self._desiste == 1):
+            return 1
+        else:
+            return 0
     
     @property
     def raio(self):

@@ -21,9 +21,14 @@ base2 = Base(100, 100, 22)
 
 # Daqui pra baixo não é executado pois não faz parte da instância    
 
-dst = distance.euclidean(base.points, base2.points)
-print(dst)
+#dst = distance.euclidean(base.points, base2.points)
+#print(dst)
 
 
 
-
+#result = str(base2.x) + ";" + str(base2.y) + ";" + str(base2.z)
+## Calcula a distancia do avião da base
+#arrayResult = result.split(";")
+#posAviao = [float(arrayResult[0]), float(arrayResult[1]), float(arrayResult[2])]
+#dst = distance.euclidean(base.points, posAviao)
+#print(base.distanciaEuclidiana(posAviao))
