@@ -3,12 +3,13 @@ import asyncio # Para métodos que rodam assincronamente
 import websockets # Cuida dos métodos de websocket
 import time 
 from base import Base
+from aviao import Aviao
 import threading
 # import shlex
 
 # Inicializa base no centro
-base = Base(6000, 6000, 6000) 
-
+base = Base(5000, 5000, 0) 
+aviao = Aviao(0, 0, 0)
 
 
 # Classe Servidor - Cuida das funções do servidor - é a base
@@ -29,19 +30,6 @@ class Servidor:
         print("Radar desconectado.")     
 
 
-# Aqui a bala é atualizada na tela, colocada em thread 
-# para não depender da resposta 
-@asyncio.coroutine
-def atualizaPosicaoBala():
-    balaAtual = base.balaAtual()
-    while True:
-        # aqui ele atira
-        balaAtual.x += 1
-        balaAtual.y += 1
-        balaAtual.z += 1000
-        time.sleep(1)
-        print("POSICAO BALA - " + str(balaAtual.x) + ";" + str(balaAtual.y) + ";" + str(balaAtual.z))
-
 # Classe Cliente - Cuida das funçoes de transferencia de mensagem
 class Cliente:  
     # Inicializa a classe do websocket  
@@ -58,7 +46,7 @@ class Cliente:
 
             while True: # Enquanto a mensagem não chegar o servidor fica esperando
                 # Escreve a mensagem vinda do teclado
-                mensagem = input("Digite sua mensagem: ") #"p"
+                mensagem = input("Digite sua mensagem: ") # Pode digitar qualquer mensagem diferente de vazio
                 
                 #Coloca o tempo na hora de enviar a mensagem e envia
                 tempoEnvio = time.time()
@@ -75,22 +63,26 @@ class Cliente:
                 
                     # Recebe o retorno e pega o tempo que demora para ele retornar
                     result = yield from self.recebe()
-                    print("POSICAO: " + result)
+
                     
                     tempoRecebimento = time.time()
                     tempoTotal = tempoRecebimento - tempoEnvio
                     
-                    # Calcula a distancia do avião da base
+                    # Aqui ele pega os dados necessários para o tiro no canhão
+                    # Será processado abaixo
                     arrayResult = result.split(";")
                     
                     # Aqui estão as coordenadas do avião
-                    arrayResultNum = [float(arrayResult[0]), float(arrayResult[1]), float(arrayResult[2])]
-                    vaiDesistir = int(arrayResult[3])
-                    
+                    angulacao = arrayResult[0]
+                    outrasInfo = arrayResult[1]
+
+                    print(arrayResult)
+
                     # Coloquei -1002, pois 1 km da base pra ser considerado acerto e 2 metros de raio do avião 
-                    distancia = base.distanciaEuclidiana(arrayResultNum) - 1002
+                    # distancia = base.distanciaEuclidiana(arrayResultNum) - 1002
                     
                     # Se ele chgar a uma distancia de 3 km e for desistir
+                    '''
                     if (distancia < 3000 and vaiDesistir == 1):
                         # volta para uma altitude de 1200 m e velocidade de 750km/h ou 208,333 m/s
                         yield from self.envia("a")
@@ -107,10 +99,12 @@ class Cliente:
                         # dentro da classe base tem 4 balas com funcoes que ajudam
                         print("menos que 10 km")
                         #print(str(balaAtual.x) + ";" + str(balaAtual.y) + ";" + str(balaAtual.z))
-                        
+                    
                         
                     print("Distancia entre avião: " + str(distancia))
-                    
+                    '''
+
+
                 # Está fora do while
                 if result == "1":
                     print("Falha no envio, tempo limite excedido.")
@@ -140,7 +134,11 @@ class Cliente:
         mensagem = yield from self.cliente.recv()
         return mensagem
     
-
+def atualizaPosicaoAviao():
+    threading.Timer(1.0, atualizaPosicaoAviao).start()
+    aviao.x += 1
+    aviao.y += 2
+    print(str(aviao.x) + ";" + str(aviao.y) + ";" + str(aviao.z))
 
 
 
@@ -151,16 +149,15 @@ loop = asyncio.get_event_loop()
 # Inicializa o servidor com web socket 
 start_server = websockets.serve(servidor.conecta, '0.0.0.0', 8766) # Usa-se 0.0.0.0 para pegar o ip do computador local
 
+atualizaPosicaoAviao()
+
 # Usa um trycatch para deixar rodando infinitamente o servidor de websocket
 try:
     print("Servidor iniciado!")
     print("Esperando conexão de cliente...")
     loop.run_until_complete(start_server)
     loop.run_forever()
+    t.start()
 finally:
     start_server.close()
-    
-'''
-ESTA SERÁ O RADAR, JÁ QUE ELE IDENTIFICARÁ O AVIÃO QUE VAI ESTAR NO CÉU E PASSA ATRAVES DE MENSAGENS A POSICAO X, Y, Z para o CLIENTE = BASE 
-TRATAR
-'''
+ 

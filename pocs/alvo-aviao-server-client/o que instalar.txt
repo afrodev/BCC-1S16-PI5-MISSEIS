@@ -1,0 +1,2 @@
+instalar numpy
+instalar scipy com o sudo
