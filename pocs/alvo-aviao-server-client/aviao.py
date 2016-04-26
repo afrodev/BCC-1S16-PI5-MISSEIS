@@ -16,6 +16,7 @@ class Aviao(Vector3D):
         self.inicializaPosicao()
         self.inicializaVelocidade() # Inicializa a velocidade de acordo com o tipo
         self._desiste = randint(1, 10)
+        print("TIPO: " + str(self.tipo) + " - DESISTE: " + str(self.desiste))
         
     # Cria as propriedades para poder ser acessada de outras classes (getters e setters)
     @property
@@ -61,7 +62,7 @@ class Aviao(Vector3D):
     # Inicializa a velocidade e altitude a partir do tipo
     def inicializaVelocidade(self):
         if (self.tipo == 1):
-            self.velocidade = 66.6667 # km/h
+            self.velocidade = 66.6667 # m/s
             self.z = 200 # altitude
             
             distX = 5000 - self.x 

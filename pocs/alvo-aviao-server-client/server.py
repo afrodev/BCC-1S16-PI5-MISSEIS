@@ -5,6 +5,7 @@ import time
 from base import Base
 from aviao import Aviao
 import threading
+import sys
 # import shlex
 
 # Inicializa base no centro
@@ -17,7 +18,8 @@ print("tipo: " + str(aviao.tipo))
 class Servidor:
     def __init__(self):
         self.tempos = []
-
+    
+    
     # Colocando esse codigo antes, executamos a função em modo assincrono
     @asyncio.coroutine
     def conecta(self, websocket, path): 
@@ -76,7 +78,8 @@ class Cliente:
                     # Aqui estão as coordenadas do avião
                     angulacao = arrayResult[0]
                     outrasInfo = arrayResult[1]
-
+                    
+                    
                     print(arrayResult)
 
                     # Coloquei -1002, pois 1 km da base pra ser considerado acerto e 2 metros de raio do avião 
@@ -135,14 +138,47 @@ class Cliente:
         mensagem = yield from self.cliente.recv()
         return mensagem
     
+# Esta função atualiza o avião
 def atualizaPosicaoAviao():
-    threading.Timer(1.0, atualizaPosicaoAviao).start()
+    t = threading.Timer(1.0, atualizaPosicaoAviao).start()
     aviao.x += aviao.vx
     aviao.y += aviao.vy
-    print(str(aviao.x) + ";" + str(aviao.y) + ";" + str(aviao.z))
+    print("BASE - " + str(base.x) + ";" + str(base.y) + ";" + str(base.z))
+    print("AVIAO - " + str(aviao.x) + ";" + str(aviao.y) + ";" + str(aviao.z))
+    verificaDistanciaBaseAviao()
+    
+# Verifica a distancia entre a base e o avião
+def verificaDistanciaBaseAviao():
+    distancia = aviao.distanciaEuclidiana(base.points) - base.raio #(1002)
+    
+    
+    if distancia < 0:
+        distancia *= (-1)
+    
+    # Verifica se acertou o alvo
+    if distancia < 1000: # Base tem 1000 de raio
+        print("Acertou o alvo")                    
+        start_server.close()
+        loop.stop()
+        sys.exit()
+        websockets.close()
+    
+    # Verifica se está no intervalo de desistencia
+    if distancia >= 1000 and distancia <= 3000:
+        if aviao.desiste == 1:
+            aviao.z = 1200
+            aviao.valocidade = 208.333 # 750 km/h | Inicializarei desse jeito pois precisamos atualizar os valores de x e y
+        
+
+    print(distancia)
 
 
 
+# O que precisa fazer?
+# - Calcular a distancia de 3000 m
+# - Calcular a distancia de 1000 m
+# - Calcular se colidiu mesmo
+    
 # Criando o servidor efetivamente
 servidor = Servidor()
 loop = asyncio.get_event_loop()
@@ -158,7 +194,7 @@ try:
     print("Esperando conexão de cliente...")
     loop.run_until_complete(start_server)
     loop.run_forever()
-    t.start()
+#    t.start()
 finally:
     start_server.close()
  

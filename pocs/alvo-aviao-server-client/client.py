@@ -7,7 +7,7 @@ from bala import Bala
 
 # O cliente vai ser apenas pra base
 # Ele que vai fazer o calculo para acertar o alvo
-ws = create_connection("ws://192.168.39.176:8766")
+ws = create_connection("ws://172.16.1.169:8766")
 bala = Bala(0, 0, 0)
 
 # Cuida do retorno da conexão de abertura com o websocket
@@ -35,7 +35,6 @@ def recebeResposta():
                     
             # Aqui estão as coordenadas do avião
             #arrayResultNum = [arrayResult[0]), float(arrayResult[1]), float(arrayResult[2])]
-
 
             ws.send("info1;info2") # aqui eu retorno a angulação da bala e os dados de onde ele atirou
         else:
