@@ -10,6 +10,7 @@ import threading
 # Inicializa base no centro
 base = Base(5000, 5000, 0) 
 aviao = Aviao(0, 0, 0)
+print("tipo: " + str(aviao.tipo))
 
 
 # Classe Servidor - Cuida das funções do servidor - é a base
@@ -136,8 +137,8 @@ class Cliente:
     
 def atualizaPosicaoAviao():
     threading.Timer(1.0, atualizaPosicaoAviao).start()
-    aviao.x += 1
-    aviao.y += 2
+    aviao.x += aviao.vx
+    aviao.y += aviao.vy
     print(str(aviao.x) + ";" + str(aviao.y) + ";" + str(aviao.z))
 
 

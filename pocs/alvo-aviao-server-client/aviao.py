@@ -1,5 +1,5 @@
 from numpy import *
-from random import randint
+from random import *
 from Vector3D import Vector3D
 import asyncio # Para métodos que rodam assincronamente
 import time
@@ -67,18 +67,72 @@ class Aviao(Vector3D):
             distX = 5000 - self.x 
             distY = 5000 - self.y
 
-            tangente = distY / distX
+            # print("distX: " + str(distX))
+            # print("distY: " + str(distY))
 
-            teta = arctan(tangente)           
+            tangente = distY / distX
+            teta = arctan(tangente)   
+
+            if distX < 0:
+                teta += math.pi
+
+            # print("tangente: " + str(tangente))
+            # print("teta: " + str(teta))        
 
             cosseno = cos(teta)
             seno = sin(teta)
 
+            # print("cosseno: " + str(cosseno))
+            # print("seno: " + str(seno))
+
             self.vx = self.velocidade * cosseno 
             self.vy = self.velocidade * seno 
+
+            # print("vx: " + str(self.vx))
+            # print("vy: " + str(self.vy))
         else:
             self.z = 500
             self.velocidade = 111.111
+
+            distX = 5000 - self.x 
+            distY = 5000 - self.y
+
+            # print("distX: " + str(distX))
+            # print("distY: " + str(distY))
+
+            tangente = distY / distX
+            teta = arctan(tangente)
+
+            if distX < 0:
+                teta += math.pi
+
+            # print("tangente: " + str(tangente))
+            # print("teta: " + str(teta))    
+
+            alteracao = randrange(10, 75)
+            # print("alteracao antes: " + str(alteracao))
+            alteracao = math.radians(alteracao)
+
+            pos = randint(0, 1)
+            if pos == 0:
+                alteracao = -alteracao
+
+            teta += alteracao
+
+            # print("alteracao: " + str(alteracao))
+            # print("teta: " + str(teta))        
+
+            cosseno = cos(teta)
+            seno = sin(teta)
+
+            # print("cosseno: " + str(cosseno))
+            # print("seno: " + str(seno))
+
+            self.vx = self.velocidade * cosseno 
+            self.vy = self.velocidade * seno 
+
+            # print("vx: " + str(self.vx))
+            # print("vy: " + str(self.vy))
 
     def inicializaPosicao(self):
         self.x = randint(0, 10000)
@@ -92,15 +146,15 @@ class Aviao(Vector3D):
         
         self.y = raizes[pos]
 
-        # print(self.x)
-        # print(self.y)
+        print("x: " + str(self.x))
+        print("y: " + str(self.y))
 
     
 # Daqui pra baixo não é executado pois não faz parte da instância    
    
         
     
-esfera = Aviao(1, 1, 1) 
+# esfera = Aviao(1, 1, 1) 
 
 #
 #print(esfera.velocidade)
