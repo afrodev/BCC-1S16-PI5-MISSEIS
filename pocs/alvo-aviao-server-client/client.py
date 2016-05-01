@@ -7,7 +7,7 @@ from bala import Bala
 
 # O cliente vai ser apenas pra base
 # Ele que vai fazer o calculo para acertar o alvo
-ws = create_connection("ws://172.16.1.169:8766")
+ws = create_connection("ws://172.16.1.169:8768")
 bala = Bala(0, 0, 0)
 
 # Cuida do retorno da conexão de abertura com o websocket

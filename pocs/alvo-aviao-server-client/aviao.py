@@ -1,4 +1,6 @@
 from numpy import *
+import numpy 
+
 from random import *
 from Vector3D import Vector3D
 import asyncio # Para métodos que rodam assincronamente
@@ -9,13 +11,18 @@ class Aviao(Vector3D):
     # Inicializa o avião junto com a classe super, que é a herança
     def __init__(self, x, y, z):
         Vector3D.__init__(self, x, y, z)
-        self._tipo = randint(1, 2)  # Sorteia entre tipo 1 e 2
+        # self._tipo = randint(1, 2)  # Sorteia entre tipo 1 e 2
+        self._tipo = 2 # <================================================================================
         self._velocidade = 0 
         self._vx = 0 
         self._vy = 0        # Inicializa parametros
         self.inicializaPosicao()
         self.inicializaVelocidade() # Inicializa a velocidade de acordo com o tipo
         self._desiste = randint(1, 10)
+        # self._desiste = 1 #<===============================================================================
+        self._jaDesistiu = 0
+        self._tempoVoando = 0
+        self._tempoMudanca = numpy.random.normal(7.5, 1)
         print("TIPO: " + str(self.tipo) + " - DESISTE: " + str(self.desiste))
         
     # Cria as propriedades para poder ser acessada de outras classes (getters e setters)
@@ -46,7 +53,31 @@ class Aviao(Vector3D):
     @property
     def tipo(self):
         return self._tipo
+
+    @tipo.setter
+    def tipo(self, value):
+        self._tipo = value
+
+    @property
+    def jaDesistiu(self):
+        return self._jaDesistiu
+
+    @jaDesistiu.setter
+    def jaDesistiu(self, value):
+        self._jaDesistiu = value
     
+    @property
+    def tempoVoando(self):
+        return self._tempoVoando
+
+    @tempoVoando.setter
+    def tempoVoando(self, value):
+        self._tempoVoando = value
+
+    @property
+    def tempoMudanca(self):
+        return self._tempoMudanca
+
     # Se o avião chegar a 3 km ele desiste ou não
     @property
     def desiste(self):
@@ -61,15 +92,12 @@ class Aviao(Vector3D):
     
     # Inicializa a velocidade e altitude a partir do tipo
     def inicializaVelocidade(self):
-        if (self.tipo == 1):
-            self.velocidade = 66.6667 # m/s
+        if self.tipo == 1:
+            self.velocidade = 33.33333333 # m/s
             self.z = 200 # altitude
             
             distX = 5000 - self.x 
             distY = 5000 - self.y
-
-            # print("distX: " + str(distX))
-            # print("distY: " + str(distY))
 
             tangente = distY / distX
             teta = arctan(tangente)   
@@ -77,29 +105,17 @@ class Aviao(Vector3D):
             if distX < 0:
                 teta += math.pi
 
-            # print("tangente: " + str(tangente))
-            # print("teta: " + str(teta))        
-
             cosseno = cos(teta)
             seno = sin(teta)
 
-            # print("cosseno: " + str(cosseno))
-            # print("seno: " + str(seno))
-
             self.vx = self.velocidade * cosseno 
             self.vy = self.velocidade * seno 
-
-            # print("vx: " + str(self.vx))
-            # print("vy: " + str(self.vy))
-        else:
+        elif self.tipo == 2:
             self.z = 500
-            self.velocidade = 111.111
+            self.velocidade = 55.55555555
 
             distX = 5000 - self.x 
             distY = 5000 - self.y
-
-            # print("distX: " + str(distX))
-            # print("distY: " + str(distY))
 
             tangente = distY / distX
             teta = arctan(tangente)
@@ -107,33 +123,38 @@ class Aviao(Vector3D):
             if distX < 0:
                 teta += math.pi
 
-            # print("tangente: " + str(tangente))
-            # print("teta: " + str(teta))    
-
             alteracao = randrange(10, 75)
-            # print("alteracao antes: " + str(alteracao))
             alteracao = math.radians(alteracao)
 
             pos = randint(0, 1)
             if pos == 0:
                 alteracao = -alteracao
 
-            teta += alteracao
-
-            # print("alteracao: " + str(alteracao))
-            # print("teta: " + str(teta))        
+            teta += alteracao       
 
             cosseno = cos(teta)
             seno = sin(teta)
 
-            # print("cosseno: " + str(cosseno))
-            # print("seno: " + str(seno))
+            self.vx = self.velocidade * cosseno 
+            self.vy = self.velocidade * seno 
+        elif self.tipo == 3:
+            self.z = 1200
+            self.velocidade = 104.166666666 # 750 km/h
+
+            distX = 5000 - self.x 
+            distY = 5000 - self.y
+
+            tangente = distY / distX
+            teta = arctan(tangente)   
+
+            if distX < 0:
+                teta += math.pi
+
+            cosseno = cos(teta)
+            seno = sin(teta)
 
             self.vx = self.velocidade * cosseno 
             self.vy = self.velocidade * seno 
-
-            # print("vx: " + str(self.vx))
-            # print("vy: " + str(self.vy))
 
     def inicializaPosicao(self):
         self.x = randint(0, 10000)
@@ -149,6 +170,23 @@ class Aviao(Vector3D):
 
         print("x: " + str(self.x))
         print("y: " + str(self.y))
+
+    def verificaDesistencia(self):
+        if self.jaDesistiu == 0 and self.desiste == 1:
+            print("desistiu")
+            self.tipo = 3
+            self.jaDesistiu = 1
+            self.inicializaVelocidade()
+
+    def atualizaPosicao(self):
+        self.x += self.vx
+        self.y += self.vy
+        self.tempoVoando += 0.5
+        print("voando " + str(self.tempoVoando))
+        print("mudanca " + str(self.tempoMudanca))
+        if self.tipo == 2 and self.tempoVoando >= self.tempoMudanca:
+            self.tipo = 1
+            self.inicializaVelocidade()
 
     
 # Daqui pra baixo não é executado pois não faz parte da instância    
