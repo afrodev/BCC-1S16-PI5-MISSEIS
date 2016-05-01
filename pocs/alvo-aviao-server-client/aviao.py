@@ -11,8 +11,8 @@ class Aviao(Vector3D):
     # Inicializa o avião junto com a classe super, que é a herança
     def __init__(self, x, y, z):
         Vector3D.__init__(self, x, y, z)
-        # self._tipo = randint(1, 2)  # Sorteia entre tipo 1 e 2
-        self._tipo = 2 # <================================================================================
+        self._tipo = randint(1, 2)  # Sorteia entre tipo 1 e 2
+        # self._tipo = 2 # <================================================================================
         self._velocidade = 0 
         self._vx = 0 
         self._vy = 0        # Inicializa parametros
@@ -23,7 +23,7 @@ class Aviao(Vector3D):
         self._jaDesistiu = 0
         self._tempoVoando = 0
         self._tempoMudanca = numpy.random.normal(7.5, 1)
-        print("TIPO: " + str(self.tipo) + " - DESISTE: " + str(self.desiste))
+        # print("TIPO: " + str(self.tipo) + " - DESISTE: " + str(self.desiste))
         
     # Cria as propriedades para poder ser acessada de outras classes (getters e setters)
     @property
@@ -168,12 +168,12 @@ class Aviao(Vector3D):
         
         self.y = raizes[pos]
 
-        print("x: " + str(self.x))
-        print("y: " + str(self.y))
+        # print("x: " + str(self.x))
+        # print("y: " + str(self.y))
 
     def verificaDesistencia(self):
         if self.jaDesistiu == 0 and self.desiste == 1:
-            print("desistiu")
+            # print("desistiu")
             self.tipo = 3
             self.jaDesistiu = 1
             self.inicializaVelocidade()
@@ -182,11 +182,14 @@ class Aviao(Vector3D):
         self.x += self.vx
         self.y += self.vy
         self.tempoVoando += 0.5
-        print("voando " + str(self.tempoVoando))
-        print("mudanca " + str(self.tempoMudanca))
+        # print("voando " + str(self.tempoVoando))
+        # print("mudanca " + str(self.tempoMudanca))
         if self.tipo == 2 and self.tempoVoando >= self.tempoMudanca:
             self.tipo = 1
             self.inicializaVelocidade()
+
+    def reiniciaAviao(self):
+        self.__init__(0, 0, 0)
 
     
 # Daqui pra baixo não é executado pois não faz parte da instância    

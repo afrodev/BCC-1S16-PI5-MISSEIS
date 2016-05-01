@@ -143,11 +143,14 @@ class Cliente:
 # Esta função atualiza o avião
 def atualizaPosicaoAviao():
     t = threading.Timer(0.5, atualizaPosicaoAviao).start()
-    aviao.atualizaPosicao()
-    print("BASE - " + str(base.x) + ";" + str(base.y) + ";" + str(base.z))
-    print("AVIAO - " + str(aviao.x) + ";" + str(aviao.y) + ";" + str(aviao.z))
-    print("TEMPO VOANDO - " + str(aviao.tempoVoando) + "s")
+    
+    # print("BASE - x = " + str(base.x) + "; y = " + str(base.y) + "; z = " + str(base.z))
+    print("BASE - x = {:5.2f}; y = {:5.2f}; z = ".format(base.x, base.y) + str(base.z))
+    # print("AVIAO - x = " + str(aviao.x) + "; y = " + str(aviao.y) + "; z = " + str(aviao.z))
+    print("AVIAO - x = {:5.2f}; y = {:5.2f}; z = ".format(aviao.x, aviao.y) + str(aviao.z))
+    # print("TEMPO VOANDO - " + str(aviao.tempoVoando) + "s")
     verificaDistanciaBaseAviao()
+    aviao.atualizaPosicao()
     
 # Verifica a distancia entre a base e o avião
 def verificaDistanciaBaseAviao():
@@ -156,18 +159,36 @@ def verificaDistanciaBaseAviao():
     distZ = 0 - aviao.z
 
     distancia = math.sqrt(distX * distX + distY * distY + distZ * distZ)
-    print(distancia)
+    print("DISTANCIA - {:5.2f}m\n".format(distancia))
     
     # Verifica se acertou o alvo
     if distancia < 1000: # Base tem 1000 de raio
         print("Acertou o alvo")                    
-        os._exit(1)
+        reiniciaAviao()
 
     
     # Verifica se está no intervalo de desistencia
     if distancia <= 3000:
         aviao.verificaDesistencia()
 
+    if distancia > 5000 and aviao.tempoVoando > 0:
+        print("Avião Saiu do Raio")
+        reiniciaAviao()
+
+
+def reiniciaAviao():
+    print("'s' - Se quiser sair do programa")
+    print("'a' - Se quiser criar um aviao")
+
+    op = input("")
+
+    if op == 's':
+        print("Programa foi fechado")
+        os._exit(1)
+
+    elif op == 'a':
+        print("Avião foi criado")
+        aviao.reiniciaAviao()
 
 
 
@@ -183,9 +204,9 @@ loop = asyncio.get_event_loop()
 # Inicializa o servidor com web socket 
 start_server = websockets.serve(servidor.conecta, '0.0.0.0', 8769) # Usa-se 0.0.0.0 para pegar o ip do computador local
 
-
 # Usa um trycatch para deixar rodando infinitamente o servidor de websocket
 try:
+    reiniciaAviao()
     atualizaPosicaoAviao()
     print("Servidor iniciado!")
     print("Esperando conexão de cliente...")
