@@ -38,6 +38,7 @@ class Bala(Vector3D):
 
         self.tempoVoando = 0
         self.atirada = True
+        # print("oK")
 
         # print("vx = " + str(self.vx) + " vy = " + str(self.vy) + " vz = " + str(self.vZInicial))
 
@@ -53,7 +54,7 @@ class Bala(Vector3D):
 
             # print("vz = " + str(self.vZInicial))
             # print("tempo = " + str(self.tempoVoando))
-            print("BALA - x = {:5.2f}; y = {:5.2f}; z = {:5.2f}".format(self.x, self.y, self.z))
+            # print("BALA - x = {:5.2f}; y = {:5.2f}; z = {:5.2f}".format(self.x, self.y, self.z))
             # print("BALA - x = " + str(self.x) + " y = " + str(self.y) + " z = " + str(self.z))
     
 

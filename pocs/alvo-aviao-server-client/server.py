@@ -72,7 +72,7 @@ class Cliente:
 
                 while result == "1" and tempoTotal < intervaloLimite:
                     #print(distancia)
-                    if distancia <= 3000:
+                    if distancia <= 3000 and aviao.z < 1000:
                         global jaEnviouParaClient
                         global bala
 
@@ -87,19 +87,20 @@ class Cliente:
                             arrayResult = result.split(";")
                             anguloAzimute = float(arrayResult[0])
                             angulo = float(arrayResult[1])
-
-                            bala = Bala(base, anguloAzimute, angulo)
-
-                            bala.atualizaVelocidades()
-                            # print(bala.anguloAzimute)
-                            # print(bala.x)
-                            # print(bala.angulo)
-
-
+                            delay = float(arrayResult[2])
+                            tempoEnvio = float(arrayResult[3])
                             tempoRecebimento = time.time()
+
                             tempoTotal = tempoRecebimento - tempoEnvio
+
                             
-                           
+                            # print("tempoEnvio = " + str(tempoEnvio))
+                            # print("tempoTotal = " + str(tempoTotal))
+
+                            delay -= tempoTotal
+                            print("delay = " + str(delay))
+
+                            t = threading.Timer(delay, criaBala, args = [anguloAzimute, angulo]).start()                            
                             jaEnviouParaClient = 1
 
                     else:
@@ -171,6 +172,8 @@ class Cliente:
         finally:
             self.servidor.desconecta(self)
 
+    
+
     # Envia mensagem pelo websocket
     @asyncio.coroutine
     def envia(self, mensagem):
@@ -181,6 +184,12 @@ class Cliente:
     def recebe(self):
         mensagem = yield from self.cliente.recv()
         return mensagem
+
+def criaBala(anguloAzimute, angulo):
+    global bala
+
+    bala = Bala(base, anguloAzimute, angulo)
+    bala.atualizaVelocidades()
     
 # Esta função atualiza o avião
 def atualizaPosicaoAviao():
@@ -189,8 +198,9 @@ def atualizaPosicaoAviao():
     # print("BASE - x = " + str(base.x) + "; y = " + str(base.y) + "; z = " + str(base.z))
     # print("BASE - x = {:5.2f}; y = {:5.2f}; z = ".format(base.x, base.y) + str(base.z))
     # print("AVIAO - x = " + str(aviao.x) + "; y = " + str(aviao.y) + "; z = " + str(aviao.z))
-    print("AVIAO - x = {:5.2f}; y = {:5.2f}; z = ".format(aviao.x, aviao.y) + str(aviao.z))
+    print("AVIAO - x = {:5.2f}; y = {:5.2f}; z = {:5.2f}; tempo = {:5.2f}\nBALA - x = {:5.2f}; y = {:5.2f}; z = {:5.2f}; tempo = {:5.2f}".format(aviao.x, aviao.y, aviao.z, aviao.tempoVoando, bala.x, bala.y, bala.z, bala.tempoVoando))
     # print("TEMPO VOANDO - " + str(aviao.tempoVoando) + "s")
+    verificaDistanciaAviaoBala()
     verificaDistanciaBaseAviao()
     aviao.atualizaPosicao()
     bala.atualizaPosicao()
@@ -204,11 +214,11 @@ def verificaDistanciaBaseAviao():
     global distancia
 
     distancia = math.sqrt(distX * distX + distY * distY + distZ * distZ)
-    print("DISTANCIA - {:5.2f}m\n".format(distancia))
+    print("DISTANCIA AVIAO/BASE - {:5.2f}m".format(distancia))
     
     # Verifica se acertou o alvo
     if distancia < 1000: # Base tem 1000 de raio
-        print("Acertou o alvo")                    
+        print("Acertou a base")                    
         reiniciaAviao()
 
 
@@ -221,6 +231,20 @@ def verificaDistanciaBaseAviao():
     if distancia > 5000 and aviao.tempoVoando > 1:
         print("Avião Saiu do Raio")
         reiniciaAviao()
+
+def verificaDistanciaAviaoBala():
+    if bala.atirada:
+        distX = bala.x - aviao.x
+        distY = bala.y - aviao.y
+        distZ = bala.z - aviao.z
+
+        distancia = math.sqrt(distX * distX + distY * distY + distZ * distZ)
+        print("DISTANCIA BALA/AVIAO - {:5.2f}m".format(distancia))
+        
+        # Verifica se acertou o alvo
+        if distancia <= 2: # Base tem 1000 de raio
+            print("Acertou o aviao")                    
+            reiniciaAviao()
 
 
 def reiniciaAviao():
@@ -249,7 +273,7 @@ servidor = Servidor()
 loop = asyncio.get_event_loop()
 
 # Inicializa o servidor com web socket 
-start_server = websockets.serve(servidor.conecta, '0.0.0.0', 10769) # Usa-se 0.0.0.0 para pegar o ip do computador local
+start_server = websockets.serve(servidor.conecta, '0.0.0.0', 9769) # Usa-se 0.0.0.0 para pegar o ip do computador local
 
 # Usa um trycatch para deixar rodando infinitamente o servidor de websocket
 try:

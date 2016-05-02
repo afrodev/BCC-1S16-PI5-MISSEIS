@@ -8,7 +8,7 @@ import math
 
 # O cliente vai ser apenas pra base
 # Ele que vai fazer o calculo para acertar o alvo
-ws = create_connection("ws://192.168.1.42:10769")
+ws = create_connection("ws://172.16.1.89:9769")
 
 
 # Cuida do retorno da conexão de abertura com o websocket
@@ -29,7 +29,7 @@ def recebeResposta():
 
         # Caso a mensagem for igual a c, calcula o x, y, z do avião e retorna
         # if mensagem == "x" or mensagem == "y":
-        print("Mensagem: {0}".format(mensagem) + "")
+        # print("Mensagem: {0}".format(mensagem) + "")
         
         # Separa os dados vindos do websocket x, y, z  
         arrayResult = mensagem.split(";")
@@ -43,38 +43,31 @@ def recebeResposta():
 
         tempoAtual = time.time()
         difTempo = tempoAtual - tempoEnvio
-        # print(str(difTempo) + " " + str(velo))
         deslocamentoX = difTempo * vx
         deslocamentoY = difTempo * vy
-        print("deslocamentoX = " + str(deslocamentoX) + " deslocamentoY = " + str(deslocamentoY))
+        # print("deslocamentoX = " + str(deslocamentoX) + " deslocamentoY = " + str(deslocamentoY))
 
         x += deslocamentoX
         y += deslocamentoY
         print("xAtualizado = " + str(x) + " yAtualizado = " + str(y))
 
-        xFuturo = x + 40 * vx
-        yFuturo = y + 40 * vy
-        print("xFuturo = " + str(xFuturo) + " yFuturo = " + str(yFuturo))
+        xFuturo = x + 125 * vx
+        yFuturo = y + 125 * vy
+        print("PosX = " + str(xFuturo) + " PosY = " + str(yFuturo))
 
         distX = 5000 - xFuturo
         distY = 5000 - yFuturo
 
         distFutura = math.sqrt(distX * distX + distY * distY)
-        print("distx = " + str(distX) + " distY = " + str(distY))
-        print("distFutura = " + str(distFutura))
+        # print("distx = " + str(distX) + " distY = " + str(distY))
+        # print("distFutura = " + str(distFutura))
 
         vTiro = 1175
         gravidade = 9.8
 
         angulo = 0
         angulo1 = math.atan(((vTiro ** 2) - math.sqrt((vTiro ** 4) - gravidade * (gravidade * (distFutura * distFutura) + 2 * z * (vTiro * vTiro)))) / (gravidade * distFutura))
-        # angulo1 = math.atan((par1 - math.sqrt(par2 - gravidade * (par3 + par4))) / par5)
         angulo2 = math.atan(((vTiro ** 2) + math.sqrt((vTiro ** 4) - gravidade * (gravidade * (distFutura * distFutura) + 2 * z * (vTiro * vTiro)))) / (gravidade * distFutura))
-        # angulo2 = math.atan((par1 + math.sqrt(par2 - gravidade * (par3 + par4))) / par5)
-
-        # print(str(xFuturo) + " " + str(yFuturo))
-        # print(str(angulo1))
-        # print(str(angulo2))
 
         if angulo1 < angulo2:
             angulo = angulo1
@@ -96,17 +89,35 @@ def recebeResposta():
 
         vPlano = vTiro * math.cos(angulo)
 
-        vx = vPlano * math.cos(anguloAzimute)
-        vy = vPlano * math.sin(anguloAzimute)
+        vxTiro = vPlano * math.cos(anguloAzimute)
+        vyTiro = vPlano * math.sin(anguloAzimute)
 
-        vz = vTiro * math.sin(angulo)
+        vzTiro = vTiro * math.sin(angulo)
 
-        posz = vz * 2.54949 - (((9.8) * (2.54949 ** 2)) / 2)
+        # posz = vzTiro * 2.54949 - (((9.8) * (2.54949 ** 2)) / 2)
 
-        # print("vx = " + str(vx / 20) + " vy = " + str(vy / 20) + " vz = " + str(vz) + " posz = " + str(posz))
+        tempoVooTiro = distFutura / vPlano
 
-        
-        strRetorna = str(anguloAzimute) + ";" + str(angulo)
+        vAviao = math.sqrt(vx * vx + vy * vy)
+        vAviao *= (1/0.03)
+
+        distAbatimentoX = xFuturo - x
+        distAbatimentoY = yFuturo - y
+        distAbatimento = math.sqrt(distAbatimentoX ** 2 + distAbatimentoY ** 2)
+
+        tempoVooAviao = distAbatimento / vAviao
+        # print("dist aviao = " + str(distAbatimento) + " v aviao = " + str(vAviao))        
+
+
+        print("tempo voo bala = " + str(tempoVooTiro) + " tempo voo aviao = " + str(tempoVooAviao))
+
+        delay = tempoVooAviao - tempoVooTiro
+
+        print("delay = " + str(delay))
+
+        tempoEnvio = time.time()
+
+        strRetorna = str(anguloAzimute) + ";" + str(angulo) + ";" + str(delay) + ";" + str(tempoEnvio)
 
         # Aqui estão as coordenadas do avião
         #arrayResultNum = [arrayResult[0]), float(arrayResult[1]), float(arrayResult[2])]
