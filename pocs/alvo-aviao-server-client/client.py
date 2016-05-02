@@ -4,11 +4,12 @@ from websocket import create_connection
 import time
 import threading
 from bala import Bala 
+import math
 
 # O cliente vai ser apenas pra base
 # Ele que vai fazer o calculo para acertar o alvo
-ws = create_connection("ws://172.16.1.169:8768")
-bala = Bala(0, 0, 0)
+ws = create_connection("ws://192.168.1.42:10769")
+
 
 # Cuida do retorno da conexão de abertura com o websocket
 print("Iniciando...")
@@ -27,18 +28,92 @@ def recebeResposta():
         mensagem = ws.recv() # Aqui é recebido x, y e o z do avião que será calculado mais pra frente
 
         # Caso a mensagem for igual a c, calcula o x, y, z do avião e retorna
-        if mensagem == "c":
-            print("Mensagem: {0}".format(mensagem) + "")
-            
-            # Separa os dados vindos do websocket x, y, z  
-            arrayResult = mensagem.split(";")
-                    
-            # Aqui estão as coordenadas do avião
-            #arrayResultNum = [arrayResult[0]), float(arrayResult[1]), float(arrayResult[2])]
+        # if mensagem == "x" or mensagem == "y":
+        print("Mensagem: {0}".format(mensagem) + "")
+        
+        # Separa os dados vindos do websocket x, y, z  
+        arrayResult = mensagem.split(";")
 
-            ws.send("info1;info2") # aqui eu retorno a angulação da bala e os dados de onde ele atirou
+        x = float(arrayResult[0])
+        y = float(arrayResult[1])
+        z = float(arrayResult[2])
+        vx = float(arrayResult[3])
+        vy = float(arrayResult[4])
+        tempoEnvio = float(arrayResult[5])
+
+        tempoAtual = time.time()
+        difTempo = tempoAtual - tempoEnvio
+        # print(str(difTempo) + " " + str(velo))
+        deslocamentoX = difTempo * vx
+        deslocamentoY = difTempo * vy
+        print("deslocamentoX = " + str(deslocamentoX) + " deslocamentoY = " + str(deslocamentoY))
+
+        x += deslocamentoX
+        y += deslocamentoY
+        print("xAtualizado = " + str(x) + " yAtualizado = " + str(y))
+
+        xFuturo = x + 40 * vx
+        yFuturo = y + 40 * vy
+        print("xFuturo = " + str(xFuturo) + " yFuturo = " + str(yFuturo))
+
+        distX = 5000 - xFuturo
+        distY = 5000 - yFuturo
+
+        distFutura = math.sqrt(distX * distX + distY * distY)
+        print("distx = " + str(distX) + " distY = " + str(distY))
+        print("distFutura = " + str(distFutura))
+
+        vTiro = 1175
+        gravidade = 9.8
+
+        angulo = 0
+        angulo1 = math.atan(((vTiro ** 2) - math.sqrt((vTiro ** 4) - gravidade * (gravidade * (distFutura * distFutura) + 2 * z * (vTiro * vTiro)))) / (gravidade * distFutura))
+        # angulo1 = math.atan((par1 - math.sqrt(par2 - gravidade * (par3 + par4))) / par5)
+        angulo2 = math.atan(((vTiro ** 2) + math.sqrt((vTiro ** 4) - gravidade * (gravidade * (distFutura * distFutura) + 2 * z * (vTiro * vTiro)))) / (gravidade * distFutura))
+        # angulo2 = math.atan((par1 + math.sqrt(par2 - gravidade * (par3 + par4))) / par5)
+
+        # print(str(xFuturo) + " " + str(yFuturo))
+        # print(str(angulo1))
+        # print(str(angulo2))
+
+        if angulo1 < angulo2:
+            angulo = angulo1
         else:
-            ws.send("1")
+            angulo = angulo2
+
+        print("angulo = " + str(angulo))
+
+        anguloAzimute = math.atan(distY / distX)
+        if x < 5000:
+            anguloAzimute -= math.pi
+
+        if anguloAzimute < 0:
+            anguloAzimute += 2 * math.pi
+
+        print("anguloAzimute = " + str(anguloAzimute))
+
+
+
+        vPlano = vTiro * math.cos(angulo)
+
+        vx = vPlano * math.cos(anguloAzimute)
+        vy = vPlano * math.sin(anguloAzimute)
+
+        vz = vTiro * math.sin(angulo)
+
+        posz = vz * 2.54949 - (((9.8) * (2.54949 ** 2)) / 2)
+
+        # print("vx = " + str(vx / 20) + " vy = " + str(vy / 20) + " vz = " + str(vz) + " posz = " + str(posz))
+
+        
+        strRetorna = str(anguloAzimute) + ";" + str(angulo)
+
+        # Aqui estão as coordenadas do avião
+        #arrayResultNum = [arrayResult[0]), float(arrayResult[1]), float(arrayResult[2])]
+
+        ws.send(strRetorna) # aqui eu retorno a angulação da bala e os dados de onde ele atirou
+        # else:
+        #     ws.send("1")
 
     # Quando sai do while infinito ele fecha a conexão
     ws.close()
