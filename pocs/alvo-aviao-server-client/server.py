@@ -19,9 +19,11 @@ bala = Bala(base, 0, 0)
 
 print("tipo: " + str(aviao.tipo))
 distancia = 1000000000
+distanciaAB = 1000000000
 jaEnviouParaClient = 0
 balasAtiradas = 0
 tempoVooTiro = 1000
+counter = 0
 
 
 # Classe Servidor - Cuida das funções do servidor - é a base
@@ -203,7 +205,7 @@ def criaBala(anguloAzimute, angulo, delay, tempoInicio):
     tempo = aviao.tempoVoando - tempoInicio
 
     if tempo < delay:
-        t = threading.Timer(0.03, criaBala, args = [anguloAzimute, angulo, delay, tempoInicio]).start()                            
+        t = threading.Timer(0.025, criaBala, args = [anguloAzimute, angulo, delay, tempoInicio]).start()                            
     else:
         balasAtiradas += 1
         bala = Bala(base, anguloAzimute, angulo)
@@ -212,13 +214,17 @@ def criaBala(anguloAzimute, angulo, delay, tempoInicio):
 # Esta função atualiza o avião
 def atualizaPosicaoAviao():
     global tempoVooTiro
+    global counter
 
-    t = threading.Timer(0.03, atualizaPosicaoAviao).start()
+    counter += 1
+
+    t = threading.Timer(0.025, atualizaPosicaoAviao).start()
     
     # print("BASE - x = " + str(base.x) + "; y = " + str(base.y) + "; z = " + str(base.z))
     # print("BASE - x = {:5.2f}; y = {:5.2f}; z = ".format(base.x, base.y) + str(base.z))
     # print("AVIAO - x = " + str(aviao.x) + "; y = " + str(aviao.y) + "; z = " + str(aviao.z))
-    print("\nAVIAO - x = {:5.2f}; y = {:5.2f}; z = {:5.2f}\nBALA {} - x = {:5.2f}; y = {:5.2f}; z = {:5.2f}".format(aviao.x, aviao.y, aviao.z, balasAtiradas, bala.x, bala.y, bala.z))
+    if counter % 5 == 0:
+        print("\nAVIAO - x = {:5.2f}; y = {:5.2f}; z = {:5.2f}\nBALA {} - x = {:5.2f}; y = {:5.2f}; z = {:5.2f}".format(aviao.x, aviao.y, aviao.z, balasAtiradas, bala.x, bala.y, bala.z))
     # print("TEMPO VOANDO - " + str(aviao.tempoVoando) + "s")
     verificaDistanciaAviaoBala()
     verificaDistanciaBaseAviao()
@@ -232,7 +238,9 @@ def reiniciaBala():
     global jaEnviouParaClient
     global tempoVooTiro
     global bala
+    global distanciaAB
 
+    distanciaAB = 100000000
     tempoVooTiro = 1000
     bala = Bala(base, 0, 0)
     bala.cancelaBala()
@@ -251,9 +259,12 @@ def verificaDistanciaBaseAviao():
     distZ = 0 - aviao.z
 
     global distancia
+    global counter
 
     distancia = math.sqrt(distX * distX + distY * distY + distZ * distZ)
-    print("DISTANCIA AVIAO/BASE - {:5.2f}m".format(distancia))
+
+    if counter % 5 == 0:
+        print("DISTANCIA AVIAO/BASE - {:5.2f}m".format(distancia))
     
     # Verifica se acertou o alvo
     if distancia < 1000: # Base tem 1000 de raio
@@ -273,18 +284,22 @@ def verificaDistanciaBaseAviao():
 
 def verificaDistanciaAviaoBala():
     global balasAtiradas
+    global counter
+    global distanciaAB
 
     if bala.atirada:
         distX = bala.x - aviao.x
         distY = bala.y - aviao.y
         distZ = bala.z - aviao.z
 
-        distancia = math.sqrt(distX * distX + distY * distY + distZ * distZ)
-        print("DISTANCIA BALA/AVIAO - {:5.2f}m".format(distancia))
+        distanciaAB = math.sqrt(distX * distX + distY * distY + distZ * distZ)
+        
+        if counter % 5 == 0:
+            print("DISTANCIA BALA/AVIAO - {:5.2f}m".format(distanciaAB))
         
         # Verifica se acertou o alvo
-        if distancia <= 2: # Base tem 1000 de raio
-            print("Acertou o aviao com {} balas".format(balasAtiradas))                    
+        if distanciaAB <= 2: # Base tem 1000 de raio
+            print("\nAcertou o aviao com {} balas\nPosicao ({:5.2f};{:5.2f})\nDistancia entre aviao e bala = {:5.2f}".format(balasAtiradas, bala.x, bala.y, distanciaAB))                    
             reiniciaAviao()
 
 
@@ -295,11 +310,13 @@ def reiniciaAviao():
     global bala
     global jaEnviouParaClient
     global distancia   
+    global distanciaAB
     global aviao     
     global balasAtiradas
     global tempoVooTiro
 
     distancia = 1000000000
+    distanciaAB = 1000000000
     balasAtiradas = 0
     tempoVooTiro = 1000
     jaEnviouParaClient = 0

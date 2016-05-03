@@ -29,7 +29,7 @@ class Bala(Vector3D):
         return 1
 
     def atualizaVelocidades(self):
-        vPlano = self.velocidade / (1/0.03) * math.cos(self.angulo)
+        vPlano = self.velocidade / (1/0.025) * math.cos(self.angulo)
 
         self.vx = vPlano * math.cos(self.anguloAzimute)
         self.vy = vPlano * math.sin(self.anguloAzimute)
@@ -44,7 +44,7 @@ class Bala(Vector3D):
 
     def atualizaPosicao(self):
         if self.atirada:
-            self.tempoVoando += 0.03
+            self.tempoVoando += 0.025
             gravidade = 9.8
             # self.vz = self.vZInicial - (9.8 * self.tempoVoando)
 

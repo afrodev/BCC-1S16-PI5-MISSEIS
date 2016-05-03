@@ -51,8 +51,8 @@ def recebeResposta():
         y += deslocamentoY
         # print("xAtualizado = " + str(x) + " yAtualizado = " + str(y))
 
-        xFuturo = x + 123 * vx
-        yFuturo = y + 123 * vy
+        xFuturo = x + 125 * vx
+        yFuturo = y + 125 * vy
         print("\nPosX = " + str(xFuturo) + " PosY = " + str(yFuturo))
 
         distX = 5000 - xFuturo
@@ -99,7 +99,7 @@ def recebeResposta():
         tempoVooTiro = distFutura / vPlano
 
         vAviao = math.sqrt(vx * vx + vy * vy)
-        vAviao *= (1/0.03)
+        vAviao *= (1/0.025)
 
         distAbatimentoX = xFuturo - x
         distAbatimentoY = yFuturo - y

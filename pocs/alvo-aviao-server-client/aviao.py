@@ -93,7 +93,7 @@ class Aviao(Vector3D):
     # Inicializa a velocidade e altitude a partir do tipo
     def inicializaVelocidade(self):
         if self.tipo == 1:
-            self.velocidade = 66.6666666 / (1/0.03) # m/s
+            self.velocidade = 66.6666666 / (1/0.025) # m/s
             self.z = 200 # altitude
             
             distX = 5000 - self.x 
@@ -112,7 +112,7 @@ class Aviao(Vector3D):
             self.vy = self.velocidade * seno 
         elif self.tipo == 2:
             self.z = 500
-            self.velocidade = 111.111111111 / (1/0.03)
+            self.velocidade = 111.111111111 / (1/0.025)
 
             distX = 5000 - self.x 
             distY = 5000 - self.y
@@ -139,7 +139,7 @@ class Aviao(Vector3D):
             self.vy = self.velocidade * seno 
         elif self.tipo == 3:
             self.z = 1200
-            self.velocidade = 208.333333333 / (1/0.03) # 750 km/h
+            self.velocidade = 208.333333333 / (1/0.025) # 750 km/h
 
             distX = 5000 - self.x 
             distY = 5000 - self.y
@@ -181,7 +181,7 @@ class Aviao(Vector3D):
     def atualizaPosicao(self):
         self.x += self.vx
         self.y += self.vy
-        self.tempoVoando += 0.03
+        self.tempoVoando += 0.025
         # print("voando " + str(self.tempoVoando))
         # print("mudanca " + str(self.tempoMudanca))
         if self.tipo == 2 and self.tempoVoando >= self.tempoMudanca:
