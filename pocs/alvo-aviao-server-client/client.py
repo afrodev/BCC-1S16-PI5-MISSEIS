@@ -8,7 +8,7 @@ import math
 
 # O cliente vai ser apenas pra base
 # Ele que vai fazer o calculo para acertar o alvo
-ws = create_connection("ws://192.168.35.141:9769")
+ws = create_connection("ws://172.16.1.89:9769")
 
 
 # Cuida do retorno da conexão de abertura com o websocket
@@ -51,8 +51,8 @@ def recebeResposta():
         y += deslocamentoY
         # print("xAtualizado = " + str(x) + " yAtualizado = " + str(y))
 
-        xFuturo = x + 125 * vx
-        yFuturo = y + 125 * vy
+        xFuturo = x + 123 * vx
+        yFuturo = y + 123 * vy
         print("\nPosX = " + str(xFuturo) + " PosY = " + str(yFuturo))
 
         distX = 5000 - xFuturo
@@ -113,11 +113,13 @@ def recebeResposta():
 
         delay = tempoVooAviao - tempoVooTiro
 
-        print("delay = " + str(delay))
+        print("Delay = " + str(delay))
+
+        print("Tempo de voo do tiro = " + str(tempoVooTiro))
 
         tempoEnvio = time.time()
 
-        strRetorna = str(anguloAzimute) + ";" + str(angulo) + ";" + str(delay) + ";" + str(tempoEnvio)
+        strRetorna = str(anguloAzimute) + ";" + str(angulo) + ";" + str(delay) + ";" + str(tempoEnvio) + ";" + str(tempoVooTiro)
 
         # Aqui estão as coordenadas do avião
         #arrayResultNum = [arrayResult[0]), float(arrayResult[1]), float(arrayResult[2])]

@@ -18,8 +18,8 @@ class Aviao(Vector3D):
         self._vy = 0        # Inicializa parametros
         self.inicializaPosicao()
         self.inicializaVelocidade() # Inicializa a velocidade de acordo com o tipo
-        self._desiste = randint(1, 10)
-        # self._desiste = 0 #<===============================================================================
+        # self._desiste = randint(1, 10)
+        self._desiste = 0 #<===============================================================================
         self._jaDesistiu = 0
         self._tempoVoando = 0
         self._tempoMudanca = numpy.random.normal(7.5, 1)

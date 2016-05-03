@@ -20,6 +20,8 @@ bala = Bala(base, 0, 0)
 print("tipo: " + str(aviao.tipo))
 distancia = 1000000000
 jaEnviouParaClient = 0
+balasAtiradas = 0
+tempoVooTiro = 1000
 
 
 # Classe Servidor - Cuida das funções do servidor - é a base
@@ -74,12 +76,15 @@ class Cliente:
                     #print(distancia)
                     global distancia
                     global aviao
+                    global balasAtiradas
 
-                    if distancia <= 3000 and aviao.z < 1000:
+                    if distancia <= 3000 and aviao.z < 1000 and balasAtiradas < 4:
                         global jaEnviouParaClient
                         global bala
 
                         if jaEnviouParaClient == 0:
+                            global tempoVooTiro
+
                             mensagemTotal = str(aviao.x) + ";" + str(aviao.y) + ";" + str(aviao.z) + ";" + str(aviao.vx) + ";" + str(aviao.vy) + ";" + str(tempoEnvio)
 
                             yield from self.envia(mensagemTotal)
@@ -92,6 +97,7 @@ class Cliente:
                             angulo = float(arrayResult[1])
                             delay = float(arrayResult[2])
                             tempoEnvio = float(arrayResult[3])
+                            tempoVooTiro = float(arrayResult[4])
                             tempoRecebimento = time.time()
 
                             tempoTotal = tempoRecebimento - tempoEnvio
@@ -192,29 +198,52 @@ class Cliente:
 
 def criaBala(anguloAzimute, angulo, delay, tempoInicio):
     global bala
+    global balasAtiradas
 
     tempo = aviao.tempoVoando - tempoInicio
 
     if tempo < delay:
         t = threading.Timer(0.03, criaBala, args = [anguloAzimute, angulo, delay, tempoInicio]).start()                            
     else:
+        balasAtiradas += 1
         bala = Bala(base, anguloAzimute, angulo)
         bala.atualizaVelocidades()
     
 # Esta função atualiza o avião
 def atualizaPosicaoAviao():
+    global tempoVooTiro
+
     t = threading.Timer(0.03, atualizaPosicaoAviao).start()
     
     # print("BASE - x = " + str(base.x) + "; y = " + str(base.y) + "; z = " + str(base.z))
     # print("BASE - x = {:5.2f}; y = {:5.2f}; z = ".format(base.x, base.y) + str(base.z))
     # print("AVIAO - x = " + str(aviao.x) + "; y = " + str(aviao.y) + "; z = " + str(aviao.z))
-    print("\nAVIAO - x = {:5.2f}; y = {:5.2f}; z = {:5.2f}\nBALA - x = {:5.2f}; y = {:5.2f}; z = {:5.2f}".format(aviao.x, aviao.y, aviao.z, bala.x, bala.y, bala.z))
+    print("\nAVIAO - x = {:5.2f}; y = {:5.2f}; z = {:5.2f}\nBALA {} - x = {:5.2f}; y = {:5.2f}; z = {:5.2f}".format(aviao.x, aviao.y, aviao.z, balasAtiradas, bala.x, bala.y, bala.z))
     # print("TEMPO VOANDO - " + str(aviao.tempoVoando) + "s")
     verificaDistanciaAviaoBala()
     verificaDistanciaBaseAviao()
     aviao.atualizaPosicao()
-    bala.atualizaPosicao()
+    if bala.tempoVoando < tempoVooTiro:
+        bala.atualizaPosicao()
+    else:
+        reiniciaBala()
+
+def reiniciaBala():
+    global jaEnviouParaClient
+    global tempoVooTiro
+    global bala
+
+    tempoVooTiro = 1000
+    bala = Bala(base, 0, 0)
+    bala.cancelaBala()
+    jaEnviouParaClient = 0
+
+    # t = threading.Timer(0.06, resetaClient).start()
     
+
+# def resetaClient():
+#     jaEnviouParaClient = 0
+
 # Verifica a distancia entre a base e o avião
 def verificaDistanciaBaseAviao():
     distX = base.x - aviao.x
@@ -243,6 +272,8 @@ def verificaDistanciaBaseAviao():
         reiniciaAviao()
 
 def verificaDistanciaAviaoBala():
+    global balasAtiradas
+
     if bala.atirada:
         distX = bala.x - aviao.x
         distY = bala.y - aviao.y
@@ -253,7 +284,7 @@ def verificaDistanciaAviaoBala():
         
         # Verifica se acertou o alvo
         if distancia <= 2: # Base tem 1000 de raio
-            print("Acertou o aviao")                    
+            print("Acertou o aviao com {} balas".format(balasAtiradas))                    
             reiniciaAviao()
 
 
@@ -265,8 +296,12 @@ def reiniciaAviao():
     global jaEnviouParaClient
     global distancia   
     global aviao     
+    global balasAtiradas
+    global tempoVooTiro
 
     distancia = 1000000000
+    balasAtiradas = 0
+    tempoVooTiro = 1000
     jaEnviouParaClient = 0
 
     op = input("")
