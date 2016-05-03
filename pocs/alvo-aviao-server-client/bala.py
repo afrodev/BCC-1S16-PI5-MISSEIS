@@ -52,6 +52,9 @@ class Bala(Vector3D):
             self.y += self.vy
             self.z = self.vZInicial * self.tempoVoando - ((gravidade * (self.tempoVoando ** 2)) / 2)
 
+    def cancelaBala(self):
+        self.atirada = False
+
             # print("vz = " + str(self.vZInicial))
             # print("tempo = " + str(self.tempoVoando))
             # print("BALA - x = {:5.2f}; y = {:5.2f}; z = {:5.2f}".format(self.x, self.y, self.z))

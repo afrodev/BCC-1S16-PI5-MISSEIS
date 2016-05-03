@@ -14,7 +14,7 @@ import os
 
 # Inicializa base no centro
 base = Base(5000, 5000, 0) 
-aviao = Aviao(0, 0, 0)
+aviao = Aviao(0, 0, 1000000)
 bala = Bala(base, 0, 0)
 
 print("tipo: " + str(aviao.tipo))
@@ -72,6 +72,9 @@ class Cliente:
 
                 while result == "1" and tempoTotal < intervaloLimite:
                     #print(distancia)
+                    global distancia
+                    global aviao
+
                     if distancia <= 3000 and aviao.z < 1000:
                         global jaEnviouParaClient
                         global bala
@@ -98,9 +101,11 @@ class Cliente:
                             # print("tempoTotal = " + str(tempoTotal))
 
                             delay -= tempoTotal
-                            print("delay = " + str(delay))
+                            # print("delay = " + str(delay))
+                            tempoInicio = aviao.tempoVoando
 
-                            t = threading.Timer(delay, criaBala, args = [anguloAzimute, angulo]).start()                            
+                            criaBala(anguloAzimute, angulo, delay, tempoInicio)
+                            
                             jaEnviouParaClient = 1
 
                     else:
@@ -185,11 +190,16 @@ class Cliente:
         mensagem = yield from self.cliente.recv()
         return mensagem
 
-def criaBala(anguloAzimute, angulo):
+def criaBala(anguloAzimute, angulo, delay, tempoInicio):
     global bala
 
-    bala = Bala(base, anguloAzimute, angulo)
-    bala.atualizaVelocidades()
+    tempo = aviao.tempoVoando - tempoInicio
+
+    if tempo < delay:
+        t = threading.Timer(0.03, criaBala, args = [anguloAzimute, angulo, delay, tempoInicio]).start()                            
+    else:
+        bala = Bala(base, anguloAzimute, angulo)
+        bala.atualizaVelocidades()
     
 # Esta função atualiza o avião
 def atualizaPosicaoAviao():
@@ -198,7 +208,7 @@ def atualizaPosicaoAviao():
     # print("BASE - x = " + str(base.x) + "; y = " + str(base.y) + "; z = " + str(base.z))
     # print("BASE - x = {:5.2f}; y = {:5.2f}; z = ".format(base.x, base.y) + str(base.z))
     # print("AVIAO - x = " + str(aviao.x) + "; y = " + str(aviao.y) + "; z = " + str(aviao.z))
-    print("AVIAO - x = {:5.2f}; y = {:5.2f}; z = {:5.2f}; tempo = {:5.2f}\nBALA - x = {:5.2f}; y = {:5.2f}; z = {:5.2f}; tempo = {:5.2f}".format(aviao.x, aviao.y, aviao.z, aviao.tempoVoando, bala.x, bala.y, bala.z, bala.tempoVoando))
+    print("\nAVIAO - x = {:5.2f}; y = {:5.2f}; z = {:5.2f}\nBALA - x = {:5.2f}; y = {:5.2f}; z = {:5.2f}".format(aviao.x, aviao.y, aviao.z, bala.x, bala.y, bala.z))
     # print("TEMPO VOANDO - " + str(aviao.tempoVoando) + "s")
     verificaDistanciaAviaoBala()
     verificaDistanciaBaseAviao()
@@ -251,6 +261,14 @@ def reiniciaAviao():
     print("'s' - Se quiser sair do programa")
     print("'a' - Se quiser criar um aviao")
 
+    global bala
+    global jaEnviouParaClient
+    global distancia   
+    global aviao     
+
+    distancia = 1000000000
+    jaEnviouParaClient = 0
+
     op = input("")
 
     if op == 's':
@@ -259,7 +277,13 @@ def reiniciaAviao():
 
     elif op == 'a':
         print("Avião foi criado")
+
         aviao.reiniciaAviao()
+        bala = Bala(base, 0, 0)
+        bala.cancelaBala()
+        
+
+
 
 
 

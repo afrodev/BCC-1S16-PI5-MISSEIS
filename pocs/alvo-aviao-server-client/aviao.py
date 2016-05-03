@@ -18,8 +18,8 @@ class Aviao(Vector3D):
         self._vy = 0        # Inicializa parametros
         self.inicializaPosicao()
         self.inicializaVelocidade() # Inicializa a velocidade de acordo com o tipo
-        # self._desiste = randint(1, 10)
-        self._desiste = 0 #<===============================================================================
+        self._desiste = randint(1, 10)
+        # self._desiste = 0 #<===============================================================================
         self._jaDesistiu = 0
         self._tempoVoando = 0
         self._tempoMudanca = numpy.random.normal(7.5, 1)
@@ -189,7 +189,7 @@ class Aviao(Vector3D):
             self.inicializaVelocidade()
 
     def reiniciaAviao(self):
-        self.__init__(0, 0, 0)
+        self.__init__(0, 0, 1000000)
 
     
 # Daqui pra baixo não é executado pois não faz parte da instância    
