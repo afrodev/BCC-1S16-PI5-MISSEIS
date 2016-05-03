@@ -87,6 +87,8 @@ class Cliente:
                         if jaEnviouParaClient == 0:
                             global tempoVooTiro
 
+                            tempoEnvio = time.time()
+
                             mensagemTotal = str(aviao.x) + ";" + str(aviao.y) + ";" + str(aviao.z) + ";" + str(aviao.vx) + ";" + str(aviao.vy) + ";" + str(tempoEnvio)
 
                             yield from self.envia(mensagemTotal)
@@ -98,7 +100,7 @@ class Cliente:
                             anguloAzimute = float(arrayResult[0])
                             angulo = float(arrayResult[1])
                             delay = float(arrayResult[2])
-                            tempoEnvio = float(arrayResult[3])
+                            # tempoEnvio = float(arrayResult[3])
                             tempoVooTiro = float(arrayResult[4])
                             tempoRecebimento = time.time()
 
@@ -109,7 +111,7 @@ class Cliente:
                             # print("tempoTotal = " + str(tempoTotal))
 
                             delay -= tempoTotal
-                            # print("delay = " + str(delay))
+                            print("delay = " + str(delay))
                             tempoInicio = aviao.tempoVoando
 
                             criaBala(anguloAzimute, angulo, delay, tempoInicio)

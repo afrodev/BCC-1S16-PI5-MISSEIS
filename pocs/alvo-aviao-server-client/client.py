@@ -41,14 +41,14 @@ def recebeResposta():
         vy = float(arrayResult[4])
         tempoEnvio = float(arrayResult[5])
 
-        tempoAtual = time.time()
-        difTempo = tempoAtual - tempoEnvio
-        deslocamentoX = difTempo * vx
-        deslocamentoY = difTempo * vy
+        # tempoAtual = time.time()
+        # difTempo = tempoAtual - tempoEnvio
+        # deslocamentoX = difTempo * vx
+        # deslocamentoY = difTempo * vy
         # print("deslocamentoX = " + str(deslocamentoX) + " deslocamentoY = " + str(deslocamentoY))
 
-        x += deslocamentoX
-        y += deslocamentoY
+        # x += deslocamentoX
+        # y += deslocamentoY
         # print("xAtualizado = " + str(x) + " yAtualizado = " + str(y))
 
         xFuturo = x + 125 * vx
