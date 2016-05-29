@@ -63,22 +63,15 @@ void oscEvent(OscMessage theOscMessage) {
     String result = p.trim(); //<>//
     valores = result.split(";");
     
-    //array[1] = array[1].trim();
-    //valores = array[1].split(";");
-    
     println(p);
-
-    println(valores);
 
     aviaoX = float(valores[0]) * 0.1;
     aviaoY = float(valores[1]) * 0.1;
     aviaoZ = float(valores[2]) * 1.2;
-    
-    // 2110.69;8870.51;200.00; 2.55; 0.00;5000.00;5000.00; 0.00; 0.00;
-    
-    //tiroX =  float(valores[5]) * 0.1;
-    //tiroY =  float(valores[6]) * 0.1;
-    //tiroZ =  float(valores[7]) * 1.2;
+        
+    tiroX =  float(valores[5]) * 0.1;
+    tiroY =  float(valores[6]) * 0.1;
+    tiroZ =  float(valores[7]) * 1.2;
     
     redraw();
     println(p);
@@ -87,8 +80,29 @@ void oscEvent(OscMessage theOscMessage) {
 void draw() {
   background(11);
   
-  inc += 0.01; // incrementa o bloco de desenho
+  // Criando eixos Y (de acordo com o processing) 
+  beginShape();
+  vertex(0, 0, 0);
+  vertex(0, 600, 0);
+  vertex(0, 0, 0);
+  endShape();
   
+  
+  beginShape();
+  vertex(0, 600, 0);
+  vertex(600, 600, 0);
+  vertex(0, 600, 0);
+  endShape();
+
+  beginShape();
+  vertex(0, 600, 0);
+  vertex(0, 600, -10000);
+  vertex(0, 600, 0);
+  endShape();
+
+
+  inc += 0.01; // incrementa o bloco de desenho
+   camera(mouseX, height/2, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
   /* BLOCO PARA DESENHAR O AVIAO PASSANDO */
   // Cria uma nova matriz (array de numeros) em cima do sistemas de coordenadas, para mudar a posiçao do objeto
   pushMatrix(); 
@@ -97,11 +111,6 @@ void draw() {
   stroke(0, 200, 0);
   fill(0,0, 200); 
   translate(600 - aviaoY, (600 - aviaoZ), -aviaoX); // Muda a posição na tela
-  
-  // Printa posições do avião pra ter certeza que estão recebendo
-  //println(aviaoX);
-  //println(aviaoY);
-  //println(aviaoZ);
   
   rotateX(-mouseY * 0.01); // roda no eixo x
   rotateY(-mouseX * 0.01); // roda no eixo y
@@ -148,8 +157,5 @@ void draw() {
   sphere(2);
   
   popMatrix();
-  
-  
-  
   
 }
