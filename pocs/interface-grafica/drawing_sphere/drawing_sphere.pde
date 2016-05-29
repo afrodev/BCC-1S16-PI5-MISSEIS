@@ -82,27 +82,37 @@ void draw() {
   
   // Criando eixos Y (de acordo com o processing) 
   beginShape();
-  vertex(0, 0, -1000);
-  vertex(0, 600, -5000);
-  vertex(0, 0, -5000);
+  vertex(0, 0, -600);
+  vertex(0, 600, -600);
+  vertex(0, 0, -600);
   endShape();
   
   
   beginShape();
-  vertex(0, 600, 0);
+  vertex(0, 600, -600);
+  vertex(600, 600, -600);
+  //vertex(0, 600, -600);
   vertex(600, 600, 0);
   vertex(0, 600, 0);
   endShape();
 
   beginShape();
   vertex(0, 600, 0);
-  vertex(0, 600, -50000);
+  vertex(0, 600, -600);
   vertex(0, 600, 0);
   endShape();
+  
+  
+  // Calculando o valor do raio
+  noFill();
+  stroke(30, 30, 30);
 
+  translate(600 - baseY, (600 - baseZ), -baseX);
+  sphere(3000 * 0.1);
+  
 
   inc += 0.01; // incrementa o bloco de desenho
-  camera(mouseX, height/2, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
+  camera(mouseX,mouseY, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
   
   /* BLOCO PARA DESENHAR O AVIAO PASSANDO */
   // Cria uma nova matriz (array de numeros) em cima do sistemas de coordenadas, para mudar a posiçao do objeto
@@ -118,11 +128,10 @@ void draw() {
   rotateZ(inc);
   
   // Esfera que recebe como parâmetro um raio
-  sphere(10);
+  sphere(8);
   
   // deleta o array de objetos que estão fora da tela do flip
   popMatrix(); 
-  
   
   /* ------------------------------------------------------------------- */
   
@@ -139,9 +148,9 @@ void draw() {
   
   rotateX(-mouseY * 0.01); // roda no eixo x
   rotateY(-mouseX * 0.01); // roda no eixo y
-  rotateZ(inc);
+  //rotateZ(inc);
   
-  sphere(2);
+  sphere(10);
   popMatrix(); // deleta o array de objetos que estão fora da tela do flip
  
  /* ------------------------------------------------------------------- */
@@ -158,5 +167,4 @@ void draw() {
   sphere(2);
   
   popMatrix();
-  
 }
