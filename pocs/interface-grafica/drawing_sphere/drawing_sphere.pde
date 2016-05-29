@@ -82,9 +82,9 @@ void draw() {
   
   // Criando eixos Y (de acordo com o processing) 
   beginShape();
-  vertex(0, 0, 0);
-  vertex(0, 600, 0);
-  vertex(0, 0, 0);
+  vertex(0, 0, -1000);
+  vertex(0, 600, -5000);
+  vertex(0, 0, -5000);
   endShape();
   
   
@@ -96,13 +96,14 @@ void draw() {
 
   beginShape();
   vertex(0, 600, 0);
-  vertex(0, 600, -10000);
+  vertex(0, 600, -50000);
   vertex(0, 600, 0);
   endShape();
 
 
   inc += 0.01; // incrementa o bloco de desenho
-   camera(mouseX, height/2, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
+  camera(mouseX, height/2, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
+  
   /* BLOCO PARA DESENHAR O AVIAO PASSANDO */
   // Cria uma nova matriz (array de numeros) em cima do sistemas de coordenadas, para mudar a posiçao do objeto
   pushMatrix(); 
