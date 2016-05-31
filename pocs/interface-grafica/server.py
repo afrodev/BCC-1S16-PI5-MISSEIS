@@ -172,7 +172,7 @@ def atualizaPosicaoAviao():
         
         # MANDA MENSAGEM OSC PARA A INTERFACE
         # AVIAOX, AVIAOY, AVIAOZ, AVIAOTEMPOVOANDO, BALAX, BALAY, BALAZ, BALAZ, BALATEMPOVOANDO
-        messageOSC = "{:5.2f};{:5.2f};{:5.2f};{:5.2f};{:5.2f};{:5.2f};{:5.2f};{:5.2f};{:5.2f};".format(aviao.x, aviao.y, aviao.z, aviao.tempoVoando, balasAtiradas, bala.x, bala.y, bala.z, bala.tempoVoando)
+        messageOSC = "{:5.2f};{:5.2f};{:5.2f};{:5.2f};{:5.2f};{:5.2f};{:5.2f};{:5.2f};{:5.2f};0".format(aviao.x, aviao.y, aviao.z, aviao.tempoVoando, balasAtiradas, bala.x, bala.y, bala.z, bala.tempoVoando)
         sendMessageOSC(messageOSC) 
         
         
@@ -245,6 +245,10 @@ def verificaDistanciaAviaoBala():
         # Verifica se acertou o alvo
         if distanciaAB <= 2: # Base tem 1000 de raio
             print("\nAcertou o aviao com {} balas\nPosicao (x:{:5.2f}; y:{:5.2f})\nDistancia entre aviao e bala = {:5.2f}".format(balasAtiradas, bala.x, bala.y, distanciaAB))                    
+            
+            messageOSC = "{:5.2f};{:5.2f};{:5.2f};{:5.2f};{:5.2f};{:5.2f};{:5.2f};{:5.2f};{:5.2f};1".format(aviao.x, aviao.y, aviao.z, aviao.tempoVoando, ++balasAtiradas, bala.x, bala.y, bala.z, bala.tempoVoando)
+            sendMessageOSC(messageOSC) 
+            
             reiniciaAviao()
 
 
