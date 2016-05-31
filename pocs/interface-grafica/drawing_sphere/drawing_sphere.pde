@@ -26,6 +26,12 @@ String []array;
 String opcao;
 String []valores;
 
+float camX;
+float camY;
+
+float lastX;
+float lastY;
+
 float inc = 0.0; // Esse float muda rotação
 
 void setup() { 
@@ -73,33 +79,46 @@ void oscEvent(OscMessage theOscMessage) {
     tiroY =  float(valores[6]) * 0.1;
     tiroZ =  float(valores[7]) * 1.2;
     
+    camX = 0;
+    camY = 0;
+    
+    lastX = 0;
+    lastY = 0;
+    
     redraw();
     println(p);
 }
 
 void draw() {
   background(11);
+  fill(0);
   
   // Criando eixos Y (de acordo com o processing) 
   beginShape();
-  vertex(0, 0, -600);
-  vertex(0, 600, -600);
-  vertex(0, 0, -600);
+  vertex(0, 0, -500);
+  vertex(0, 500, -500);
+  vertex(0, 0, -500);
   endShape();
   
   
   beginShape();
-  vertex(0, 600, -600);
-  vertex(600, 600, -600);
-  //vertex(0, 600, -600);
-  vertex(600, 600, 0);
-  vertex(0, 600, 0);
+  vertex(-500, 500, -500);
+  vertex(500, 500, -500);
+  vertex(0, 500, -500);
   endShape();
 
   beginShape();
-  vertex(0, 600, 0);
-  vertex(0, 600, -600);
-  vertex(0, 600, 0);
+  vertex(0, 500, 0);
+  vertex(0, 500, -1000);
+  vertex(0, 500, 0);
+  endShape();
+  
+  beginShape();
+  vertex(-500, 500, -1000);
+  vertex(500, 500, -1000);
+  vertex(500, 500, 0);
+  vertex(-500, 500, 0);
+  vertex(-500, 500, -1000);
   endShape();
   
   
@@ -107,12 +126,24 @@ void draw() {
   noFill();
   stroke(30, 30, 30);
 
-  translate(600 - baseY, (600 - baseZ), -baseX);
+  translate(500 - baseY, (500 - baseZ), -baseX);
   sphere(3000 * 0.1);
   
 
   inc += 0.01; // incrementa o bloco de desenho
-  camera(mouseX,mouseY, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
+  
+  //if (mousePressed) {
+  //  float distX = mouseX - lastX;
+  //  float distY = mouseY - lastY;
+    
+  //  camX += distX;
+  //  camY += distY;
+  //}
+  
+  //lastX = mouseX;
+  //lastY = mouseY;
+  
+  camera(mouseX + 500,mouseY, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
   
   /* BLOCO PARA DESENHAR O AVIAO PASSANDO */
   // Cria uma nova matriz (array de numeros) em cima do sistemas de coordenadas, para mudar a posiçao do objeto
@@ -121,7 +152,7 @@ void draw() {
   // Pinta linhas do objeto
   stroke(0, 200, 0);
   fill(0,0, 200); 
-  translate(600 - aviaoY, (600 - aviaoZ), -aviaoX); // Muda a posição na tela
+  translate(500 - aviaoY, (500 - aviaoZ), -aviaoX); // Muda a posição na tela
   
   rotateX(-mouseY * 0.01); // roda no eixo x
   rotateY(-mouseX * 0.01); // roda no eixo y
@@ -144,7 +175,7 @@ void draw() {
   stroke(255, 255, 255);
   fill(0, 0, 0);
   
-  translate(600 - baseY, (600 - baseZ), -baseX); // Muda a posição na tela
+  translate(500 - baseY, (500 - baseZ), -baseX); // Muda a posição na tela
   
   rotateX(-mouseY * 0.01); // roda no eixo x
   rotateY(-mouseX * 0.01); // roda no eixo y
@@ -159,7 +190,7 @@ void draw() {
   stroke(255, 0, 0);
   fill(0, 0, 0);
   
-  translate(600 - tiroY, (600 - tiroZ), -tiroX); // Muda a posição na tela
+  translate(500 - tiroY, (500 - tiroZ), -tiroX); // Muda a posição na tela
   
   rotateX(-mouseY * 0.01); // roda no eixo x
   rotateY(-mouseX * 0.01); // roda no eixo y
@@ -167,4 +198,9 @@ void draw() {
   sphere(2);
   
   popMatrix();
+  
+  hint(DISABLE_DEPTH_TEST);
+  fill(255);
+  text("ichi", 500, 500);
+  hint(ENABLE_DEPTH_TEST);
 }
